@@ -43,6 +43,13 @@
     object-fit: cover;
     border-radius: 8px;
   }
+  /* dont know hoe big you wnat the pc image to be so i left it in 300  */
+  .product-img {
+    max-width: 300px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+  }
   
   
   .column.description {
@@ -81,5 +88,18 @@
     .container {
       flex-direction: column;
     }
+    .column {
+        padding: 10px;
+        text-align: center;  
+      }
+
+      /* under 300 is good can mess around with it to see if
+       yall wnat to change anything */
+      .product-img {
+        width: 80%;
+        max-width: 300px;
+        height: auto;
+        margin: 0 auto;
+      }
   }
   
