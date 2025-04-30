@@ -14,7 +14,7 @@ body {
 }
 
 #loginForm {
-    background-color: white;
+    background-color: #bff1fc;
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -40,7 +40,7 @@ button {
     justify-content: center;
     align-items: center;
     padding: 10px;
-    background-color: #FEC3E9;
+    background-color: #ffcfef;
     color: black;
     border: none;
     border-radius: 5px;
