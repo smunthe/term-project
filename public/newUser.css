@@ -12,8 +12,8 @@ body {
     font-variation-settings: "wdth" 100;
 }
 
-#register {
-    background-color: white;
+#registerForm {
+    background-color: #bff1fc;
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
