@@ -1,0 +1,127 @@
+/*
+body: background-color: #f3f0ff;
+pfp:  border: 3px solid #c3baff;
+setting link/view all: color: #6b5ce7;
+h3:     color: #4b3f72;
+favorite item: background-color: #f5f3ff;
+*/
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #FFFFDB;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  .profile-container {
+    max-width: 800px;
+    margin: auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #bff1fc;
+    margin-right: 20px;
+  }
+  
+  .profile-info h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .settings-link {
+    display: inline-block;
+    margin-top: 8px;
+    text-decoration: none;
+    color: #10afd3;
+    font-weight: 500;
+  }
+  
+  .settings-link:hover {
+    text-decoration: underline;
+  }
+  
+  .personal-info,
+  .recent-orders,
+  .favorites {
+    margin-bottom: 30px;
+  }
+  
+  h3 {
+    border-bottom: 1px solid #c6c5c5;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+    color: #da52ac;
+  }
+  
+  .order {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+  }
+  
+  .order img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-right: 15px;
+  }
+  
+  .view-all {
+    display: inline-block;
+    margin-top: 15px;
+    color: #10afd3;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .view-all:hover {
+    text-decoration: underline;
+  }
+  
+  .favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+  }
+  
+  .favorite-item {
+    background-color:  #bff1fc;
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .favorite-item img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .favorite-item p {
+    margin-top: 8px;
+    font-weight: 500;
+    color: #4b3f72;
+  }
+  
