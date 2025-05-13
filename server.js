@@ -111,6 +111,30 @@ db.run(
 
   
 });
+
+app.get('/profile', (req, res) => {
+  const username = req.query.username;
+  if (!username) {
+    return res.status(400).send("Missing username");
+  }
+
+  db.get("SELECT * FROM Users WHERE userName = ?", [username], (err, row) => {
+    if (err) {
+      return res.status(500).send("Database error");
+    }
+    if (!row) {
+      return res.status(404).send("User not found");
+    }
+
+    // You can render HTML or send JSON — for now, let's send simple HTML
+    res.send(`
+      <h1>Welcome, ${row.firstName} ${row.lastName}</h1>
+      <p>Username: ${row.userName}</p>
+      <p>Email: ${row.email}</p>
+    `);
+  });
+});
+
 // Start the server
 // TODO ➡️ Start the server by listening on the specified PORT
 app.listen(PORT, (err) => {

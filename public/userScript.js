@@ -23,6 +23,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
       const data = await response.json();
       console.log('Registration success:', data);
       alert('User registered successfully!');
+      window.location.href = '/profile?username=${encodeURIComponent(data.username)}';
   } catch (error) {
       console.error('Registration error:', error);
       alert('Registration failed!');
