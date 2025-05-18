@@ -1,0 +1,22 @@
+//- layout.pug
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title= pageTitle
+    link(rel='stylesheet', href=stylesheet)
+  body
+    nav.navbar
+      .logo
+        img.logo-img(src='/assets/logo1.png' width='80' height='80' alt='Logo')
+      .search-bar
+        input(type='text' placeholder='Search...' aria-label='Search')
+      .cart
+        a(href='/filler1.html' aria-label='Shopping Cart')
+          img(src='/cart.png' alt='Cart')
+      .sign-in
+        a(href='/login.html' aria-label='Sign In')
+          p sign
+          p in
+    block content
