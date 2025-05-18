@@ -10,6 +10,22 @@ app.set('views', path.join(__dirname, 'views'));
 // Serve static files from the public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+//for nightmare it should be the same
+//going to do that when im free in a bit
+
+
+//for dream
+
+// app.get('/product[]', (req, res) => {
+//   res.render('product', {
+//     pageTitle: 'product name',
+//     productName: 'product name',
+//     productImage: '/assets/productImages/.png',
+//     productDescription: 'edit here',
+//     stylesheet: '/productStyle.css' 
+//   });
+// });
+
 // Product page route
 app.get('/product1', (req, res) => {
   res.render('product', {
@@ -40,5 +56,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log('✅ Server running at http://localhost:3000');
+  console.log('Server running at http://localhost:3000');
 });
