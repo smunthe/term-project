@@ -264,6 +264,41 @@ app.get('/product2', (req, res) => {
     stylesheet: '/productStyle.css'
   });
 });
+
+app.get('/settings', (req,res) => {
+    if (!req.session.user) return res.redirect('/login');
+    res.render('settings', {title: 'User Settings', user: req.session.user});
+
+});
+
+app.post('/settings', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+  
+  const { firstName, shippingAddress, email, paymentMethod } = req.body;
+  const username = req.session.user.username;
+
+  const updateQuery = `
+    UPDATE Users
+    SET firstName = ?, shippingAddress = ?, email = ?, paymentMethod = ?
+    WHERE userName = ?
+  `;
+
+  db.run(updateQuery, [firstName, shippingAddress, email, paymentMethod, username], function(err) {
+    if (err) {
+      console.error("❌ Failed to update user:", err.message);
+      return res.status(500).send("Failed to update settings");
+    }
+
+    // 🔄 Update the session so profile reflects changes
+    req.session.user.firstName = firstName;
+    req.session.user.shippingAddress = shippingAddress;
+    req.session.user.email = email;
+    req.session.user.paymentMethod = paymentMethod;
+
+    res.redirect('/profile'); // ✅ Go back to profile
+  });
+});
+
 app.get('/api/session', (req, res) => {
   console.log("SESSION CHECK:", req.session); // 🔍 Watch this in terminal
   if (req.session.user) {
