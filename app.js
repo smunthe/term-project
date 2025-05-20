@@ -34,6 +34,17 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 
+// the about page
+
+app.get('/about', (req, res) => {
+    res.render('about', {
+      pageTitle: 'About Us',
+      stylesheet: '/styles.css', // or your custom about page style
+      user: req.session.user || null
+    });
+  });
+  
+
 
 //for nightmare it should be the same
 //going to do that when im free in a bit
