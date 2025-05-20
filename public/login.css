@@ -53,10 +53,8 @@ button {
 
 button:hover {
     background-color: #be669f;
-<<<<<<< Updated upstream
   }
-=======
-  }
+
 
 .top-nav {
     margin: 0;
@@ -67,6 +65,7 @@ button:hover {
     align-items: center;
     position: relative;
 }
+
 .logo { 
   font-weight: 700; 
   font-size: 20px; 
@@ -143,7 +142,4 @@ button:hover {
     display: flex;
     gap: 10px;
 }
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+

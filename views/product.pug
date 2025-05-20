@@ -1,0 +1,23 @@
+//- product.pug
+extends layout
+
+block content
+  .container
+    .column
+      img.product-img(src=productImage alt=productName)
+    .column.description
+      h2= productName
+      p= productDescription
+    .column.buying
+      label(for='quantity') Quantity:
+      input#quantity(type='number' name='quantity' value='1' min='1')
+      
+      //- testing block
+      label(for='customization') Customization:
+      input#customization(type='text' name='customization' placeholder='custom dream')
+
+      label Price:
+      p.price-text $#{productPrice}
+
+      button(type='button') Add to Cart
+      button(type='button') Add to Wishlist
