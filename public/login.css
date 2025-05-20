@@ -52,3 +52,70 @@ button {
 button:hover {
     background-color: #be669f;
   }
+
+  .top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffcfef;
+    padding: 10px 16px;
+}
+
+.logo { 
+  font-weight: 700; 
+  font-size: 20px; 
+  order: 1; 
+}
+.logo img { 
+  max-height: 40px; 
+}
+
+
+.search-bar {
+  flex: 1 1 100%;
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+  order: 3; 
+}
+.search-bar input {
+  width: 100%;
+  max-width: 400px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 0;
+  outline: 0;
+}
+
+
+.cart { 
+  font-size: 24px; 
+  cursor: pointer; 
+  order: 2; 
+}
+.cart img { 
+  height: 24px; 
+}
+
+
+.sign-in {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+  order: 2; 
+}
+.sign-in a { 
+  text-decoration: none; 
+  color: inherit; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+}
+.sign-in p { 
+  margin: 0; 
+  line-height: 1.2; 
+}
+

@@ -12,8 +12,8 @@ body {
     font-variation-settings: "wdth" 100;
 }
 
-#register {
-    background-color: white;
+#registerForm {
+    background-color: #bff1fc;
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -28,6 +28,8 @@ h1 {
 form {
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 2;
 }
 
 button {
@@ -53,3 +55,12 @@ button:hover {
     width: 100%;
     margin-top: 20px;
 }
+
+#userDisplay {
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border: 1px solid #ccc;
+    white-space: pre-wrap;
+  }

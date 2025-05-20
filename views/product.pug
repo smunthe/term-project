@@ -1,0 +1,14 @@
+//- product.pug
+extends layout
+
+block content
+  .container
+    .column
+      img.product-img(src=productImage alt=productName)
+    .column.description
+      h2= productName
+      p= productDescription
+    .column.buying
+      label(for='quantity') Quantity:
+      input#quantity(type='number' name='quantity' value='1' min='1')
+      button Add to Cart
