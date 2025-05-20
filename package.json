@@ -19,6 +19,12 @@
   "description": "",
   "dependencies": {
     "express": "^5.1.0",
+<<<<<<< Updated upstream
+=======
+    "express-session": "^1.18.1",
+    "multer": "^2.0.0",
+    "pug": "^3.0.3",
+>>>>>>> Stashed changes
     "sqlite3": "^5.1.7"
   }
 }
