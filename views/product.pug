@@ -11,4 +11,13 @@ block content
     .column.buying
       label(for='quantity') Quantity:
       input#quantity(type='number' name='quantity' value='1' min='1')
-      button Add to Cart
+      
+      //- testing block
+      label(for='customization') Customization:
+      input#customization(type='text' name='customization' placeholder='custom dream')
+
+      label Price:
+      p.price-text $#{productPrice}
+
+      button(type='button') Add to Cart
+      button(type='button') Add to Wishlist

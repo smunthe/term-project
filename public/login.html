@@ -32,6 +32,35 @@
         </div>
         <button id = "newUser" type ="button" onclick="window.location.href ='newUser.html'">New user? Click here</button>
       </form> 
+  <script>
+document.getElementById("loginForm").addEventListener("submit", async function (e) {
+  e.preventDefault();
+  const payload = {
+    username: document.getElementById("username").value,
+    password: document.getElementById("password").value
+  };
+
+  try {
+    const res = await fetch("/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include", // crucial
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      console.log("✅ Login worked. Redirecting...");
+      window.location.href = "/profile"; // delay no longer needed
+    } else {
+      alert("Login failed");
+    }
+  } catch (err) {
+    console.error("Login error:", err);
+    alert("Login error");
+  }
+});
+</script>
    
 </body>
 </html>

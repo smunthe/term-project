@@ -10,6 +10,8 @@ body {
     font-weight: 400;
     font-style: normal;
     font-variation-settings: "wdth" 100;
+    margin: 0; 
+    padding: 0;
 
 }
 
@@ -53,12 +55,15 @@ button:hover {
     background-color: #be669f;
   }
 
-  .top-nav {
+
+.top-nav {
+    margin: 0;
+    padding: 0.5rem 1rem;
+    background-color: pink;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #ffcfef;
-    padding: 10px 16px;
+    position: relative;
 }
 
 .logo { 
@@ -117,5 +122,24 @@ button:hover {
 .sign-in p { 
   margin: 0; 
   line-height: 1.2; 
+}
+
+/* Ensure buttons and icons look tidy */
+.menu-btn,
+.icons button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.logo img {
+    max-height: 40px;
+}
+
+/* Ensure icons on the right are spaced properly */
+.icons {
+    display: flex;
+    gap: 10px;
 }
 
