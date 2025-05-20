@@ -29,6 +29,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
+// 🔄 Product data - used for both homepage and dynamic product pages
+const products = [
+  { id: 1, name: 'Dream House', image: '/assets/productImages/dreamHouse.png', description: 'A cozy retreat built from imagination.', price: 20 },
+  { id: 2, name: 'Dream Car', image: '/assets/productImages/DreamCar.png', description: 'Runs on sparkles and clouds.', price: 100 },
+  { id: 3, name: 'Dream Pet', image: '/assets/productImages/DreamPet.png', description: 'Your cuddliest companion yet.', price: 15 },
+  { id: 4, name: 'Dream Partner', image: '/assets/productImages/DreamPartner.png', description: 'Someone who understands your vibes.', price: 25 },
+  { id: 5, name: 'Dream Job', image: '/assets/productImages/DreamJob.png', description: 'Work without burnout or meetings.', price: 35 },
+  { id: 6, name: 'Dream Career', image: '/assets/productImages/DreamCareer.png', description: 'Ocean breeze & pastel skies.', price: 50 },
+  { id: 7, name: 'Dream Scenario', image: '/assets/productImages/DreamScenario.png', description: 'Always fits, always cute.', price: 18 },
+  { id: 8, name: 'Healing Nightmares', image: '/assets/productImages/HealingNightmare.png', description: 'No tests, just fun learning.', price: 40 },
+  { id: 9, name: 'Retrieve Dream', image: '/assets/productImages/RetrieveDream.png', description: 'That perfect moment, on repeat.', price: 22 },
+  { id: 10, name: 'Nightmare Protection', image: '/assets/productImages/NightmareProtection.png', description: 'Sleep peacefully, always.', price: 10 },
+  { id: 11, name: 'Nightmare Roulette', image: '/assets/productImages/RouletteNightmare.png', description: 'Spin your fate.', price: 60 },
+  { id: 12, name: 'Send a Nightmare', image: '/assets/productImages/SendNightmare.png', description: 'A spooky surprise for your enemy.', price: 30 }
+];
 
 // the about page
 
@@ -63,31 +78,31 @@ app.get('/about', (req, res) => {
 
 // Product page route
 
-app.get('/product1', (req, res) => {
-  res.render('product', {
-    pageTitle: 'Dream House',
-    productName: 'Dream House',
-    // here goes the image just change after productImages
-    productImage: '/assets/productImages/DreamHouse.png',
-    //descption here any new proccut just copy and paste
-    productDescription: 'edit here',
+// app.get('/product1', (req, res) => {
+//   res.render('product', {
+//     pageTitle: 'Dream House',
+//     productName: 'Dream House',
+//     // here goes the image just change after productImages
+//     productImage: '/assets/productImages/DreamHouse.png',
+//     //descption here any new proccut just copy and paste
+//     productDescription: 'edit here',
 
-    productPrice: 20,
+//     productPrice: 20,
 
-    stylesheet: '/productStyle.css'
-  });
-});
+//     stylesheet: '/productStyle.css'
+//   });
+// });
 
 
-app.get('/product2', (req, res) => {
-  res.render('product', {
-    pageTitle: 'DreamCar',
-    productName: 'DreamCar',
-    productImage: '/assets/productImages/DreamCar.png',
-    productDescription: 'edit here',
-    stylesheet: '/productStyle.css' 
-  });
-});
+// app.get('/product2', (req, res) => {
+//   res.render('product', {
+//     pageTitle: 'DreamCar',
+//     productName: 'DreamCar',
+//     productImage: '/assets/productImages/DreamCar.png',
+//     productDescription: 'edit here',
+//     stylesheet: '/productStyle.css' 
+//   });
+// });
   
 
 
@@ -148,28 +163,29 @@ const upload = multer({ storage });
 // Routes
 
 app.get('/', (req, res) => {
-  const featuredProducts = [
-    { id: 1, name: 'Dream House', image: '/assets/productImages/dreamHouse.png', description: 'A cozy retreat built from imagination.', price: 20 },
-    { id: 2, name: 'Dream Car', image: '/assets/productImages/DreamCar.png', description: 'Runs on sparkles and clouds.', price: 100 },
-    { id: 3, name: 'Dream Pet', image: '/assets/productImages/DreamPet.png', description: 'Your cuddliest companion yet.', price: 15 },
-    { id: 4, name: 'Dream Partner', image: '/assets/productImages/DreamPartner.png', description: 'Someone who understands your vibes.', price: 25 },
-    { id: 5, name: 'Dream Job', image: '/assets/productImages/DreamJob.png', description: 'Work without burnout or meetings.', price: 35 },
-    { id: 6, name: 'Dream Career', image: '/assets/productImages/DreamCareer.png', description: 'Ocean breeze & pastel skies.', price: 50 },
-    { id: 7, name: 'Dream Scenario', image: '/assets/productImages/DreamScenario.png', description: 'Always fits, always cute.', price: 18 },
-    { id: 8, name: 'Healing Nightmares', image: '/assets/productImages/HealingNightmare.png', description: 'No tests, just fun learning.', price: 40 },
-    { id: 9, name: 'Retrieve Dream', image: '/assets/productImages/RetrieveDream.png', description: 'That perfect moment, on repeat.', price: 22 },
-    { id: 10, name: 'Nightmare Protection', image: '/assets/productImages/NightmareProtection.png', description: 'Sleep peacefully, always.', price: 10 },
-    { id: 11, name: 'Nightmare Roulette', image: '/assets/productImages/RouletteNightmare.png', description: 'Infinite battery & dreamy apps.', price: 60 },
-    { id: 12, name: 'Send a Nightmare', image: '/assets/productImages/SendNightmare.png', description: 'Your safe, sparkly space.', price: 30 },
-  ];
-
   res.render('storefront', {
     title: 'DreamStore',
-    products: featuredProducts
+    products
   });
 });
 
+// 🆕 Dynamic route for product pages
+app.get('/product/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const product = products.find(p => p.id === id);
 
+  if (!product) {
+    return res.status(404).send("Product not found");
+  }
+
+  res.render('product', {
+    pageTitle: product.name,
+    productName: product.name,
+    productImage: product.image,
+    productDescription: product.description,
+    productPrice: product.price
+  });
+});
 // app.get('/index', (req, res) => {
 //   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 // });
@@ -179,10 +195,7 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-  db.all("SELECT * FROM Users", (err, rows) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(rows);
-  });
+  res.render('register'); // This assumes your file is views/newUser.pug
 });
 
 app.post('/register', (req, res) => {
@@ -199,11 +212,24 @@ app.post('/register', (req, res) => {
     if (err) return res.status(500).json({ message: 'Insert failed', error: err });
 
     db.get("SELECT * FROM Users WHERE userName = ?", [username], (err, row) => {
-      if (err) return res.status(500).json({ message: 'Fetch after insert failed', error: err });
-      res.status(201).json(row);
+      if (err || !row) return res.status(500).json({ message: 'Fetch after insert failed', error: err });
+
+      // 🔐 Set up session
+      req.session.user = {
+        username: row.userName,
+        firstName: row.firstName,
+        email: row.email,
+        shippingAddress: row.shippingAddress,
+        paymentMethod: row.paymentMethod,
+        pfp: row.pfp || '/default-pfp.png',
+        previouslyOrdered: row.previouslyOrdered
+      };
+
+      res.status(201).json({ success: true });
     });
   });
 });
+
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
@@ -243,27 +269,6 @@ app.post('/upload-pfp', upload.single('pfp'), (req, res) => {
   });
 });
 
-app.get('/product1', (req, res) => {
-  res.render('product', {
-    pageTitle: 'Dream House',
-    productName: 'Dream House',
-    productImage: '/assets/productImages/DreamHouse.png',
-    productDescription: 'edit here',
-    productPrice: 20,
-    stylesheet: '/productStyle.css'
-  });
-});
-
-app.get('/product2', (req, res) => {
-  res.render('product', {
-    pageTitle: 'DreamCar',
-    productName: 'DreamCar',
-    productImage: '/assets/productImages/DreamCar.png',
-    productDescription: 'edit here',
-    productPrice: 100,
-    stylesheet: '/productStyle.css'
-  });
-});
 
 app.get('/settings', (req,res) => {
     if (!req.session.user) return res.redirect('/login');

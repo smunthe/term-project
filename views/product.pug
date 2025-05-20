@@ -1,5 +1,7 @@
-//- product.pug
 extends layout
+
+block styles
+  link(rel="stylesheet", href="/productStyle.css") 
 
 block content
   .container
@@ -12,7 +14,6 @@ block content
       label(for='quantity') Quantity:
       input#quantity(type='number' name='quantity' value='1' min='1')
       
-      //- testing block
       label(for='customization') Customization:
       input#customization(type='text' name='customization' placeholder='custom dream')
 
@@ -20,4 +21,3 @@ block content
       p.price-text $#{productPrice}
 
       button(type='button') Add to Cart
-      button(type='button') Add to Wishlist

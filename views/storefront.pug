@@ -1,14 +1,11 @@
 extends layout
 
 block content
-  h1 Welcome to DreamStore 🌈
-  p Explore our curated dreams made real:
-
+  h1 Welcome to the DreamStore
   .product-grid
     each product in products
       .product-card
-        img(src=product.image, alt=product.name)
-        h3= product.name
-        p= product.description
-        p Price: $#{product.price}
-        a(href=`/product${product.id}`) View Product →
+        a(href=`/product/${product.id}`)
+          img(src=product.image, alt=product.name)
+          h3= product.name
+          p $#{product.price}
