@@ -55,6 +55,7 @@ app.set('views', path.join(__dirname, 'views'));
 // });
 
 // Product page route
+
 app.get('/product1', (req, res) => {
   res.render('product', {
     pageTitle: 'Dream House',
