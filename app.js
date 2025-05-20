@@ -22,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //     productName: 'product name',
 //     productImage: '/assets/productImages/.png',
 //     productDescription: 'edit here',
+//     productPrice: 000000,
 //     stylesheet: '/productStyle.css' 
 //   });
 // });
@@ -35,6 +36,7 @@ app.get('/product1', (req, res) => {
     productImage: '/assets/productImages/DreamHouse.png',
     //descption here any new proccut just copy and paste
     productDescription: 'edit here',
+    productPrice: 20,
     stylesheet: '/productStyle.css'
   });
 });
