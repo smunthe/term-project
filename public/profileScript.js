@@ -1,7 +1,5 @@
-window.onload = () => {
-  setTimeout(loadSessionData, 100); // wait 100ms after load
-};
 
+console.log("🐛 profileScript.js is loaded and running!");
 async function loadSessionData() {
   try {
     const res = await fetch('/api/session', {
@@ -12,39 +10,44 @@ async function loadSessionData() {
     const data = await res.json();
 
     if (!data.loggedIn) {
-      window.location.href = '/login.html';
+      window.location.href = '/login';
       return;
     }
-
+    document.body.style.backgroundColor = "#e3f2fd";
     const user = data.user;
     console.log("✅ Session data loaded:", user);
     // Set Profile Header
     document.getElementById("profilePic").src = user.pfp || '/default-pfp.png';
-    document.getElementById("profileName").textContent = user.firstName;
-    document.getElementById("profileEmail").textContent = `Email: ${user.email}`;
+console.log("👀 Loaded user:", user);
+document.getElementById("profileName").textContent = user.firstName || "No name!";    document.getElementById("profileEmail").textContent = `Email: ${user.email}`;
 
     // Set Personal Info
     document.getElementById("profileAddress").textContent = `🏠 Address: ${user.shippingAddress}`;
     document.getElementById("profilePayment").textContent = `💳 Payment Method: ${user.paymentMethod}`;
 
     // Example: Parse and insert recent orders (if stored as JSON)
-    if (user.previouslyOrdered) {
-      const orders = JSON.parse(user.previouslyOrdered); // Must be stored as JSON string
-      const orderList = document.getElementById("orderList");
-      orders.slice(0, 2).forEach(order => {
-        const div = document.createElement("div");
-        div.className = "order";
-        div.innerHTML = `
-          <img src="${order.image}" alt="${order.name}" />
-          <div>
-            <p><strong>${order.name}</strong></p>
-            <p>Purchased on: ${order.date}</p>
-            <p>Status: ${order.status}</p>
-          </div>
-        `;
-        orderList.appendChild(div);
-      });
-    }
+    if (user.previouslyOrdered && user.previouslyOrdered !== "empty") {
+  try {
+    const orders = JSON.parse(user.previouslyOrdered);
+    const orderList = document.getElementById("orderList");
+
+    orders.slice(0, 2).forEach(order => {
+      const div = document.createElement("div");
+      div.className = "order";
+      div.innerHTML = `
+        <img src="${order.image}" alt="${order.name}" />
+        <div>
+          <p><strong>${order.name}</strong></p>
+          <p>Purchased on: ${order.date}</p>
+          <p>Status: ${order.status}</p>
+        </div>
+      `;
+      orderList.appendChild(div);
+    });
+  } catch (e) {
+    console.error("❌ Failed to parse previouslyOrdered JSON:", e);
+  }
+}
 
     // Example: Fill Favorites (if stored in DB later)
     const favorites = user.favorites || [
@@ -68,7 +71,11 @@ async function loadSessionData() {
     });
 
   } catch (err) {
-    console.error("Session fetch failed:", err);
-    window.location.href = '/login.html';
+   console.error("❌ SESSION FETCH FAILED:", err);
+  alert("Session error: " + err); // 🔍 you’ll actually see it now
+  window.location.href = '/login';
   }
+};
+window.onload = () => {
+  loadSessionData();
 };
