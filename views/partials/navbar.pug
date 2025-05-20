@@ -1,0 +1,25 @@
+//- views/partials/navbar.pug
+header.top-nav
+  button.menu-btn(onclick="toggleMenu()") ☰
+
+  .logo
+    a(href="/")
+      img(src="/assets/logo1.png", alt="logo")
+
+  .icons
+    button(onclick="location.href='/search.html'") 🔍
+    button(onclick="location.href='/shopingcart'") 🛒
+
+  nav#menu.dropdown-menu(style="display: none;")
+    a(href="/") 🏠 Go to Home
+    a(href="/products") 🛍️ Products
+    a(href="/profile") 👤 Profile
+    a(href="/settings") ⚙️ Settings
+    a(href="/about") ℹ️ About
+    a(href="/login") 🚪 Log Out
+
+script.
+  function toggleMenu() {
+    const menu = document.getElementById("menu");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+  }

@@ -7,27 +7,9 @@ html
     meta(name='viewport' content='width=device-width, initial-scale=1.0')
 
     title= pageTitle
-    link(rel='stylesheet', href=stylesheet)
+    link(rel="stylesheet", href="/styles.css")
+    block styles   
   body
-    nav.navbar
-      .logo
-        img(src='/assets/logo1.png' alt='Logo' width='60')
-      .search-bar
-        input(type='text' placeholder='Search...')
-
-      .cart
-        a(href='/cart')
-          img(src='/cart.png' alt='Cart' width='30')
-
-      if user
-        .profile
-          a(href='/profile')
-            img(src=user.pfp alt='Profile' width='40' style='border-radius: 50%')
-      else
-        .sign-in
-          a(href='/login.html')
-            p sign
-            p in
-
-block content
+    include ./partials/navbar.pug 
+  block content
 

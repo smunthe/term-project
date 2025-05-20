@@ -1,0 +1,28 @@
+extends layout
+block styles
+  link(rel="stylesheet", href="/profile.css")
+
+block content
+  .profile-container
+    section.profile-header
+      img#profilePic.profile-pic(src="", alt="Profile Picture")
+      .profile-info
+        h2#profileName
+        p#profileEmail
+        a.settings-link(href="/settings") ⚙️ Change Info
+
+    section.personal-info
+      h3 Personal Information
+      p#profileAddress
+      p#profilePayment
+
+    section.recent-orders
+      h3 Recently Purchased
+      #orderList
+      a.view-all(href="/orders") 🌙 View All Dream Orders
+
+    section.favorites
+      h3 Favorites
+      #favoritesGrid.favorites-grid
+
+    script(src="/profileScript.js")

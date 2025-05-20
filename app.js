@@ -1,15 +1,11 @@
-
 const express = require('express');
 const path = require('path');
 const sqlite3 = require("sqlite3").verbose();
 const session = require('express-session');
 const multer = require('multer');
 
-
 const PORT = 3000;
 const app = express();
-
-
 
 app.use(session({
   secret: 'your-secret-key',
@@ -17,19 +13,19 @@ app.use(session({
   saveUninitialized: true,
   cookie: {
     httpOnly: true,
-    sameSite: 'lax',    // 🔑 Required for fetch + cookie
-    maxAge: 1000 * 60 * 60 // optional: 1 hour
+    sameSite: 'lax',
+    maxAge: 1000 * 60 * 60,
+    secure: false // 🔥 FORCE OFF in dev mode
   }
 }));
 
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json()); 
+app.use(express.json());
 
-// Serve static files from the public folder
+// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-// Set the view engine to Pug
+// Set up Pug
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -107,44 +103,37 @@ app.get('/', (req, res) => {
 
 // CORS middleware
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Credentials', 'true');  // ✅ allow cookies!
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
 
-
+// SQLite setup
 const db = new sqlite3.Database("users.db", (err) => {
-    if (err) {
-        return console.error("Error opening database:", err.message);
-    }
-    console.log("Connected to the user database."); 
+  if (err) return console.error("Error opening database:", err.message);
+  console.log("Connected to the user database.");
+});
 
-}); 
+db.run(`CREATE TABLE IF NOT EXISTS Users (
+  userName TEXT UNIQUE,
+  email TEXT UNIQUE,
+  firstName TEXT NOT NULL,
+  lastName TEXT NOT NULL,
+  password TEXT NOT NULL,
+  rePassword TEXT NOT NULL,
+  shippingAddress TEXT DEFAULT 'empty',
+  pfp TEXT DEFAULT 'empty', 
+  paymentMethod TEXT DEFAULT 'empty', 
+  orderedBefore TEXT DEFAULT 'empty', 
+  wishList TEXT DEFAULT '[]', 
+  previouslyOrdered TEXT DEFAULT '[]'
+)`, (err) => {
+  if (err) return console.error("Error creating table: ", err.message);
+  console.log("Users table created (if it didn't already exist).");
+});
 
-
-
-
-db.run(` CREATE TABLE IF NOT EXISTS Users (
-    userName TEXT UNIQUE,
-    email TEXT UNIQUE,
-    firstName TEXT NOT NULL,
-    lastName TEXT NOT NULL,
-    password TEXT NOT NULL,
-    rePassword TEXT NOT NULL,
-    shippingAddress TEXT DEFAULT 'empty',
-    pfp TEXT DEFAULT 'empty', 
-    paymentMethod TEXT DEFAULT 'empty', 
-    orderedBefore TEXT DEFAULT 'empty', 
-    wishList TEXT DEFAULT 'empty', 
-    previouslyOrdered TEXT DEFAULT 'empty'
-  )`, (err) => {
-    if (err) {
-        return console.error("Error creating table: ", err.message);
-    }
-    console.log("Users table created (if it didn't already exist).");
-  });
-
-
+// Middleware to protect routes
 function checkLogin(req, res, next) {
   if (req.session.user) {
     next();
@@ -153,79 +142,76 @@ function checkLogin(req, res, next) {
   }
 }
 
-
+// Multer for profile image uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'public/uploads'),
   filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
 });
 const upload = multer({ storage });
 
-app.get('/newUser', (req, res) => {
-  db.all("SELECT * FROM Users", (err, rows) => {
-      if (err) {
-          console.error("Error fetching data:", err.message);
-          return res.status(500).json({ message: "Database error", error: err.message });
-      }
-      res.json(rows); 
+// Routes
+
+app.get('/', (req, res) => {
+  const featuredProducts = [
+    { id: 1, name: 'Dream House', image: '/assets/productImages/DreamHouse.png', description: 'A cozy retreat built from imagination.', price: 20 },
+    { id: 2, name: 'Dream Car', image: '/assets/productImages/DreamCar.png', description: 'Runs on sparkles and clouds.', price: 100 },
+    { id: 3, name: 'Dream Pet', image: '/assets/productImages/DreamPet.png', description: 'Your cuddliest companion yet.', price: 15 },
+    { id: 4, name: 'Dream Partner', image: '/assets/productImages/DreamPartner.png', description: 'Someone who understands your vibes.', price: 25 },
+    { id: 5, name: 'Dream Job', image: '/assets/productImages/DreamCareer.png', description: 'Work without burnout or meetings.', price: 35 },
+    { id: 6, name: 'Dream Vacation', image: '/assets/productImages/DreamVacation.png', description: 'Ocean breeze & pastel skies.', price: 50 },
+    { id: 7, name: 'Dream Outfit', image: '/assets/productImages/DreamOutfit.png', description: 'Always fits, always cute.', price: 18 },
+    { id: 8, name: 'Dream School', image: '/assets/productImages/DreamSchool.png', description: 'No tests, just fun learning.', price: 40 },
+    { id: 9, name: 'Dream Scenario', image: '/assets/productImages/DreamScenario.png', description: 'That perfect moment, on repeat.', price: 22 },
+    { id: 10, name: 'Nightmare Protection', image: '/assets/productImages/NightmareProtection.png', description: 'Sleep peacefully, always.', price: 10 },
+    { id: 11, name: 'Dream Phone', image: '/assets/productImages/DreamPhone.png', description: 'Infinite battery & dreamy apps.', price: 60 },
+    { id: 12, name: 'Dream Room', image: '/assets/productImages/DreamRoom.png', description: 'Your safe, sparkly space.', price: 30 },
+  ];
+
+  res.render('storefront', {
+    title: 'DreamStore',
+    products: featuredProducts
   });
 });
-// TODO ➡️ GET all todo items at the '/todos' path
-app.get('/register', (req, res) => {
-    //  res.json(todos);
-    db.all("SELECT * FROM Users", (err, rows) => {
-     if (err) {
-       console.error("Error fetching data:", err.message);
-       return res.status(500).json({ message: "Database error", error: err.message });
-     }
-     res.json(rows); 
-   });
-   
+
+
+// app.get('/index', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// });
+
+app.get('/login', (req, res) => {
+  res.render('login', { title: 'Login Page' });
 });
- 
-app.post('/register', (req,res) => {
-    const {username, email, firstName, lastName, password, rePassword} = req.body; 
 
-    // Basic validation
-    if (!username || !email || !firstName || !lastName || !password || !rePassword) {
-      return res.status(400).json({ message: 'All fields are required' });
+app.get('/register', (req, res) => {
+  db.all("SELECT * FROM Users", (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(rows);
+  });
+});
+
+app.post('/register', (req, res) => {
+  const { username, email, firstName, lastName, password, rePassword } = req.body;
+  if (!username || !email || !firstName || !lastName || !password || !rePassword) {
+    return res.status(400).json({ message: 'All fields are required' });
   }
-
   if (password !== rePassword) {
-      return res.status(400).json({ message: 'Passwords do not match' });
+    return res.status(400).json({ message: 'Passwords do not match' });
   }
-  const insertNewQuery = `
-    INSERT INTO Users (userName, email, firstName, lastName, password, rePassword)
-    VALUES (?,?,?,?,?,?)`;
-db.run(
-  insertNewQuery,
-  [username, email, firstName, lastName, password, rePassword],
-  function(err) {
-    if (err) {
-      return res.status(500).json({ message: 'Insert Failed', error: err });
-    }
+
+  const insertQuery = `INSERT INTO Users (userName, email, firstName, lastName, password, rePassword) VALUES (?, ?, ?, ?, ?, ?)`;
+  db.run(insertQuery, [username, email, firstName, lastName, password, rePassword], function (err) {
+    if (err) return res.status(500).json({ message: 'Insert failed', error: err });
 
     db.get("SELECT * FROM Users WHERE userName = ?", [username], (err, row) => {
-      if (err) {
-        return res.status(500).json({ message: 'Fetch after insert failed', error: err });
-      }
+      if (err) return res.status(500).json({ message: 'Fetch after insert failed', error: err });
       res.status(201).json(row);
     });
   });
-
-  
-});
-
-
-app.get('/profile', (req, res) => {
- if (!req.session.user) return res.redirect('/login.html');
-  res.sendFile(path.join(__dirname, 'public', 'profile.html'));
 });
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
-
-  const query = `SELECT * FROM Users WHERE userName = ? AND password = ?`;
-  db.get(query, [username, password], (err, row) => {
+  db.get("SELECT * FROM Users WHERE userName = ? AND password = ?", [username, password], (err, row) => {
     if (err) return res.status(500).json({ success: false, error: 'DB error' });
     if (!row) return res.status(401).json({ success: false, error: 'Invalid login' });
 
@@ -244,6 +230,9 @@ app.post('/login', (req, res) => {
   });
 });
 
+app.get('/profile', checkLogin, (req, res) => {
+  res.render('profile', { title: 'Your Profile', user: req.session.user });
+});
 
 app.post('/upload-pfp', upload.single('pfp'), (req, res) => {
   if (!req.session.user) return res.status(401).send("Unauthorized");
@@ -253,18 +242,34 @@ app.post('/upload-pfp', upload.single('pfp'), (req, res) => {
 
   db.run('UPDATE Users SET pfp = ? WHERE userName = ?', [imagePath, username], err => {
     if (err) return res.status(500).send("Failed to update profile pic");
-    req.session.user.pfp = imagePath; // Update session data too
+    req.session.user.pfp = imagePath;
     res.redirect('/profile');
   });
 });
 
-
-app.get('/index.html', checkLogin, (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+app.get('/product1', (req, res) => {
+  res.render('product', {
+    pageTitle: 'Dream House',
+    productName: 'Dream House',
+    productImage: '/assets/productImages/DreamHouse.png',
+    productDescription: 'edit here',
+    productPrice: 20,
+    stylesheet: '/productStyle.css'
+  });
 });
 
+app.get('/product2', (req, res) => {
+  res.render('product', {
+    pageTitle: 'DreamCar',
+    productName: 'DreamCar',
+    productImage: '/assets/productImages/DreamCar.png',
+    productDescription: 'edit here',
+    productPrice: 100,
+    stylesheet: '/productStyle.css'
+  });
+});
 app.get('/api/session', (req, res) => {
-  console.log("SESSION CHECK:", req.session);
+  console.log("SESSION CHECK:", req.session); // 🔍 Watch this in terminal
   if (req.session.user) {
     res.json({ loggedIn: true, user: req.session.user });
   } else {
@@ -272,17 +277,8 @@ app.get('/api/session', (req, res) => {
   }
 });
 
+
 // Start the server
-// TODO ➡️ Start the server by listening on the specified PORT
-app.listen(PORT, (err) => {
-    if(err) {
-        console.log("error in setup");
-    } 
-    console.log("Listening on Port");
-})
-
-
-app.listen(3000, () => {
-  console.log('Server running at http://localhost:3000');
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
-
