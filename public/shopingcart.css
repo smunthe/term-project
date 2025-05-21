@@ -1,0 +1,113 @@
+/* shoppingcart.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #FFFFDB;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .cart-container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #6b5ce7;
+  }
+  
+  .cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0d8ff;
+    padding-bottom: 16px;
+  }
+  
+  .cart-item img {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-right: 24px;
+  }
+  
+  .cart-item-details {
+    flex-grow: 1;
+  }
+  
+  .cart-item-details h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    color: #4a3fa0;
+  }
+  
+  .cart-item-details p {
+    margin: 0 0 12px;
+    color: #555;
+  }
+  
+  .cart-item-price {
+    font-weight: 700;
+    margin-right: 24px;
+    color: #8e7ddc;
+    font-size: 18px;
+  }
+  
+  .cart-item-actions button {
+    background-color: #8e7ddc;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    border: none;
+    outline: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cart-item-actions button:hover {
+    background-color: #6b5ce7;
+  }
+  
+  .cart-item-actions button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(107, 92, 231, 0.5);
+  }
+  
+  .cart-summary {
+    margin-top: 40px;
+    text-align: right;
+    font-size: 22px;
+    font-weight: 700;
+    color: #4a3fa0;
+  }
+  
+  .checkout-btn {
+    margin-top: 20px;
+    background-color: #6b5ce7;
+    color: white;
+    padding: 14px 28px;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .checkout-btn:hover {
+    background-color: #5742c1;
+  }
+  
+  .checkout-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(86, 66, 192, 0.6);
+  }
+  

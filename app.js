@@ -313,6 +313,23 @@ app.get('/api/session', (req, res) => {
   }
 });
 
+app.get('/shopingcart', (req, res) => {
+  const shopingcart = req.session.shopingcart || [];
+  res.render('shopingcart', { shopingcart });
+});
+
+
+app.post('/shopingcart/remove', (req, res) => {
+  const { productId } = req.body;
+
+  if (!req.session.cart) {
+    return res.redirect('/shopingcart');
+  }
+
+  req.session.cart = req.session.cart.filter(item => item.product.id !== Number(productId));
+  res.redirect('/shopingcartcart');
+});
+
 
 // Start the server
 app.listen(PORT, () => {
