@@ -48,13 +48,18 @@ const products = [
 // the about page
 
 app.get('/about', (req, res) => {
-    res.render('about', {
-      pageTitle: 'About Us',
-      stylesheet: '/styles.css', // or your custom about page style
-      user: req.session.user || null
-    });
+  const faqs = [
+    { question: 'What is your return policy?', answer: 'You cant return dreams therefore no returns are accepted' },
+    { question: 'Do you offer international shipping?', answer: 'Yes, they are dreams so as long as you are asleep or your enemy.' },
+    { question: 'How can I contact customer support?', answer: 'Meditate under the sun with a top hat' }
+  ];
+
+  res.render('about', {
+    pageTitle: 'About Us',
+    faqs,
+    user: req.session.user || null
   });
-  
+});
 
 
 //for nightmare it should be the same
