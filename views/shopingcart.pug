@@ -25,7 +25,8 @@ block content
             td #{item.quantity}
             td $#{(item.price * item.quantity).toFixed(2)}
             td
-              form(method="POST", action=`/shopingcart/remove/${item.id}`)
+              form(method="POST", action=`/shopingcart/remove`)
+                input(type="hidden" name="productId" value=item.id)
                 button(type="submit") ✖
     h3 Total: $#{shopingcart.reduce((sum, i) => sum + i.price * i.quantity, 0).toFixed(2)}
     a(href="/checkout") Proceed to Checkout

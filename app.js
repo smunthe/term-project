@@ -180,12 +180,14 @@ app.get('/product/:id', (req, res) => {
 
   res.render('product', {
     pageTitle: product.name,
+    productId: product.id,          // <-- Add this line
     productName: product.name,
     productImage: product.image,
     productDescription: product.description,
     productPrice: product.price
   });
 });
+
 // app.get('/index', (req, res) => {
 //   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 // });
@@ -314,21 +316,56 @@ app.get('/api/session', (req, res) => {
 });
 
 app.get('/shopingcart', (req, res) => {
-  const shopingcart = req.session.shopingcart || [];
-  res.render('shopingcart', { shopingcart });
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+
+  res.render('shopingcart', {
+    shopingcart: req.session.shopingcart || []
+  });
 });
 
 
 app.post('/shopingcart/remove', (req, res) => {
   const { productId } = req.body;
 
-  if (!req.session.cart) {
+  if (!req.session.shopingcart) {
     return res.redirect('/shopingcart');
   }
 
-  req.session.cart = req.session.cart.filter(item => item.product.id !== Number(productId));
-  res.redirect('/shopingcartcart');
+  req.session.shopingcart = req.session.shopingcart.filter(item => item.id !== Number(productId));
+  res.redirect('/shopingcart');
 });
+
+
+app.post('/shopingcart/add', (req, res) => {
+  const { productId, quantity, customization } = req.body;
+  const product = products.find(p => p.id === Number(productId));
+
+  if (!product) return res.status(400).send('Invalid product');
+
+  if (!req.session.shopingcart) {
+    req.session.shopingcart = [];
+  }
+
+  const existingItem = req.session.shopingcart.find(item => item.id === product.id);
+
+  if (existingItem) {
+    existingItem.quantity += Number(quantity);
+  } else {
+    req.session.shopingcart.push({
+      id: product.id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      quantity: Number(quantity),
+      customization: customization || ''
+    });
+  }
+
+  res.redirect('/shopingcart');
+});
+
 
 
 // Start the server
