@@ -1,4 +1,3 @@
-//- views/partials/navbar.pug
 header.top-nav
   button.menu-btn(onclick="toggleMenu()") ☰
 
@@ -12,7 +11,7 @@ header.top-nav
 
   nav#menu.dropdown-menu(style="display: none;")
     a(href="/") 🏠 Go to Home
-    a(href="/products") 🛍️ Products
+    a(href="/") 🛍️ Products
     a(href="/profile") 👤 Profile
     a(href="/settings") ⚙️ Settings
     a(href="/about") ℹ️ About
@@ -21,5 +20,9 @@ header.top-nav
 script.
   function toggleMenu() {
     const menu = document.getElementById("menu");
-    menu.style.display = menu.style.display === "block" ? "none" : "block";
+    if (menu.style.display === "block") {
+      menu.style.display = "none";
+    } else {
+      menu.style.display = "block";
+    }
   }
