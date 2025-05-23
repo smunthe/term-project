@@ -10,11 +10,9 @@ window.onload = async () => {
     if (data.loggedIn) {
       const user = data.user;
 
-      // Hide login icon
       const loginIcon = document.getElementById("loginIcon");
       if (loginIcon) loginIcon.style.display = "none";
 
-      // Show and set PFP
       const pfpIcon = document.getElementById("pfpIcon");
       const pfpImage = document.getElementById("pfpImage");
 
@@ -24,12 +22,35 @@ window.onload = async () => {
       }
 
     } else {
-      // If logged out, show login and hide PFP
       const loginIcon = document.getElementById("loginIcon");
       const pfpIcon = document.getElementById("pfpIcon");
 
       if (loginIcon) loginIcon.style.display = "inline-block";
       if (pfpIcon) pfpIcon.style.display = "none";
+    }
+
+    // ✅ ADD THIS FOR LIVE SEARCH
+    const searchInput = document.getElementById("searchInput");
+    const suggestionBox = document.getElementById("searchSuggestions");
+
+    if (searchInput && suggestionBox) {
+      searchInput.addEventListener("input", async () => {
+        const query = searchInput.value.trim();
+        if (query.length < 1) {
+          suggestionBox.innerHTML = "";
+          return;
+        }
+
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        const suggestions = await res.json();
+
+        suggestionBox.innerHTML = "";
+        suggestions.forEach(product => {
+          const li = document.createElement("li");
+          li.innerHTML = `<a href="/product/${product.id}">${product.name}</a>`;
+          suggestionBox.appendChild(li);
+        });
+      });
     }
 
   } catch (err) {

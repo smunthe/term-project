@@ -498,6 +498,27 @@ app.post('/upload-pfp', upload.single('pfp'), (req, res) => {
 });
 
 
+app.get('/search', (req, res) => {
+  const query = (req.query.q || "").toLowerCase();
+
+  const matchingProducts = products.filter(p =>
+    p.name.toLowerCase().includes(query) || 
+    p.description.toLowerCase().includes(query)
+  );
+
+  res.render('searchResults', {
+    query,
+    matchingProducts,
+    user: req.session.user || null
+  });
+}); 
+
+app.get('/api/search', (req, res) => {
+  const q = req.query.q?.toLowerCase() || '';
+  const matches = products.filter(p => p.name.toLowerCase().includes(q));
+  res.json(matches.slice(0, 5));
+});
+
 app.get('/settings', (req,res) => {
     if (!req.session.user) return res.redirect('/login');
     res.render('settings', {title: 'User Settings', user: req.session.user});

@@ -1,0 +1,19 @@
+extends layout
+
+block styles
+  link(rel="stylesheet", href="/styles.css")
+
+block content
+  h1 Search Results for "#{query}"
+
+  if matchingProducts.length
+    .product-grid
+      each product in matchingProducts
+        .product-card
+          a(href=`/product/${product.id}`)
+            img.product-image(src=product.image, alt=product.name)
+            h3.product-name= product.name
+            p.price $#{product.price}
+  else
+    p(style="text-align: center; margin-top: 30px; font-size: 18px; color: #be669f;") 
+      | Sorry, we couldn't find any dreams matching "#{query}" 💭

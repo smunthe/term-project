@@ -152,7 +152,7 @@ h1 {
   transition: transform 0.3s ease;
 }
 
-<<<<<<< Updated upstream
+
 .product-card:hover .product-image {
   transform: scale(1.05);
 }
@@ -190,6 +190,38 @@ h1 {
   font-size: 14px;
   border-top: 1px solid #ffb3d1;
   margin-top: 40px;
+}
+
+#searchForm {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#searchForm input {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+#searchSuggestions {
+  position: absolute;
+  background: white;
+  list-style: none;
+  padding: 0;
+  margin-top: 5px;
+  width: 250px;
+  border: 1px solid #ccc;
+  z-index: 1000;
+}
+
+#searchSuggestions li {
+  padding: 8px 12px;
+}
+
+#searchSuggestions li:hover {
+  background-color: #f0f0f0;
 }
 
 /* Responsive tweaks */
