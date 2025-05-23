@@ -1,25 +1,34 @@
 extends layout
 
+block styles
+  link(rel="stylesheet", href="about.css") 
+
 block content
-  .container.mt-5
+  .container.my-5
     // About Section
-    h1 About Us
-    p We are just three crazy people who had a crazy idea
+    .text-center.mb-5
+      h1.display-4 About Us
+      p.lead.text-muted We're just three overly caffeinated individuals who thought, "Hey, what if dreams were a product?" And then... we did it.
 
-    h2 Our Mission
-    p To deliver high-quality, user-focused products that inspire and excite.
+    .row.mb-5
+      .col-md-6
+        h2 Our Mission
+        p To deliver high-quality, user-focused dreams that won’t explode, vanish unexpectedly, or involve surprise math exams. You're welcome.
 
-    h2 Our Values
-    ul
-      li Creativity
-      li Integrity
-      li Customer Happiness
+      .col-md-6
+        h2 Our Values
+        ul.list-group.list-group-flush
+          li.list-group-item.bg-transparent.border-0.ps-0 ✨ Creativity – Because selling *boring* dreams would be illegal in some countries (probably).
+          li.list-group-item.bg-transparent.border-0.ps-0 🧭 Integrity – We only sell ethically sourced dreams. No shortcuts. No dream doping.
+          li.list-group-item.bg-transparent.border-0.ps-0 😄 Customer Happiness – If you're not smiling in REM sleep, we're not doing our job.
 
-    a(href='/') Back to Home
+    .text-center
+      a.btn.btn-outline-primary.mt-3(href='/') ⟵ Back to Home (or reality, if you must)
 
     hr.my-5
 
-    h1.mb-4 Frequently Asked Questions
+    // FAQ Section
+    h1.mb-4.text-center Frequently Asked Questions
 
     #faqAccordion.accordion
       each faq, index in faqs

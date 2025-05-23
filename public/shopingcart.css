@@ -1,113 +1,324 @@
-/* shoppingcart.css */
-
+/* Base styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #FFFFDB;
-    margin: 0;
-    padding: 0;
+  font-family: 'Poppins', Arial, sans-serif;
+  background-color: #FFFFDB; /* soft yellow background */
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+/* Container to center content */
+.cart-container {
+  max-width: 900px;
+  margin: 0 auto 60px;
+  background: #bff1fc; /* light blue content background */
+  padding: 30px 40px;
+  border-radius: 0px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+}
+
+/* Title */
+h1 {
+  text-align: center;
+  font-weight: 700;
+  font-size: 2.4rem;
+  color: #4a3fa0; 
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+  /* add subtle text shadow for contrast */
+  text-shadow: 0 0 3px rgba(0,0,0,0.15);
+}
+
+/* Cart table */
+.shopingcart-table {
+  background: #bff1fc;
+  width: 100%;
+  border-collapse: separate; /* important for border-radius to work */
+  border-spacing: 0; /* reset spacing */
+  border-radius: 12px; /* rounded corners */
+  overflow: hidden; /* clip children so rounded corners work */
+}
+
+.shopingcart-table th,
+.shopingcart-table td {
+  padding: 15px 20px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.shopingcart-table thead th {
+  background-color: #ffcfef; /* navbar pink */
+  color: #4a3fa0; /* dark purple text */
+  font-weight: 600;
+  border-bottom: 3px solid #be669f; /* use navbar pink border for subtle look */
+}
+
+.shopingcart-table tbody tr {
+  background: #bff1fc; /* light blue */
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  transition: background-color 0.3s ease;
+}
+
+.shopingcart-table tbody tr:hover {
+  background-color: #e7f7fb; /* very light blue hover */
+}
+
+.shopingcart-item-img {
+  max-width: 80px;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin-right: 10px;
+}
+
+/* Product name cell aligns left */
+.shopingcart-table td:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: #333;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Quantity input style */
+.shopingcart-table input[type="number"] {
+  width: 60px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1.5px solid #ccc;
+  text-align: center;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.shopingcart-table input[type="number"]:focus {
+  border-color: #ffcfef; /* navbar pink */
+  outline: none;
+}
+
+/* Update button style */
+.shopingcart-table button[type="submit"] {
+  background-color: #ffcfef; /* navbar pink */
+  color: #4a3fa0; /* dark purple text for contrast */
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 8px;
+}
+
+.shopingcart-table button[type="submit"]:hover {
+  background-color: #e1c7d8; /* slightly darker pink hover */
+  color: #3b3270; /* darker purple text */
+}
+
+/* Remove button style */
+.shopingcart-table td:last-child form button {
+  background: transparent;
+  color: #4a3fa0; /* changed to dark purple for better contrast */
+  font-size: 1.3rem;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.shopingcart-table td:last-child form button:hover {
+  color: #3b3270; /* even darker purple on hover */
+}
+
+/* Total price summary */
+.cart-total {
+  text-align: right;
+  font-weight: 700;
+  font-size: 1.6rem;
+  margin-top: 30px;
+  color: #4a3fa0;
+}
+
+/* Proceed to checkout link */
+.checkout-btn {
+  display: block;
+  width: max-content;
+  margin: 30px auto 0;
+  padding: 14px 40px;
+  background-color: #ffcfef; /* navbar pink */
+  color: #4a3fa0; /* dark purple text for contrast */
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.checkout-btn:hover {
+  background-color: #e1c7d8;
+  color: #3b3270;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .shopingcart-table thead {
+    display: none; /* hide header on mobile */
   }
-  
-  .cart-container {
-    max-width: 900px;
-    margin: 40px auto;
-    background: #fff;
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #6b5ce7;
-  }
-  
-  .cart-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #e0d8ff;
-    padding-bottom: 16px;
-  }
-  
-  .cart-item img {
-    width: 100px;
-    height: 100px;
+
+  .shopingcart-table tbody tr {
+    display: block;
+    margin-bottom: 25px;
+    box-shadow: none;
+    background: #bff1fc;
     border-radius: 12px;
-    object-fit: cover;
-    margin-right: 24px;
+    padding: 20px;
   }
-  
-  .cart-item-details {
-    flex-grow: 1;
-  }
-  
-  .cart-item-details h2 {
-    margin: 0 0 8px;
-    font-size: 20px;
-    color: #4a3fa0;
-  }
-  
-  .cart-item-details p {
-    margin: 0 0 12px;
-    color: #555;
-  }
-  
-  .cart-item-price {
-    font-weight: 700;
-    margin-right: 24px;
-    color: #8e7ddc;
-    font-size: 18px;
-  }
-  
-  .cart-item-actions button {
-    background-color: #8e7ddc;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    border: none;
-    outline: none;
-    transition: background-color 0.3s ease;
-  }
-  
-  .cart-item-actions button:hover {
-    background-color: #6b5ce7;
-  }
-  
-  .cart-item-actions button:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(107, 92, 231, 0.5);
-  }
-  
-  .cart-summary {
-    margin-top: 40px;
+
+  .shopingcart-table tbody tr td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
     text-align: right;
-    font-size: 22px;
-    font-weight: 700;
-    color: #4a3fa0;
   }
-  
+
+  .shopingcart-table tbody tr td:first-child {
+    justify-content: flex-start;
+  }
+
+  .shopingcart-item-img {
+    max-width: 60px;
+    margin-right: 12px;
+  }
+
+  .shopingcart-table input[type="number"] {
+    width: 50px;
+  }
+
   .checkout-btn {
-    margin-top: 20px;
-    background-color: #6b5ce7;
-    color: white;
-    padding: 14px 28px;
-    font-size: 18px;
-    border-radius: 10px;
-    cursor: pointer;
+    width: 90%;
+    padding: 14px 0;
+    font-size: 1rem;
+  }
+}
+
+.empty-cart {
+  text-align: center;
+  background-color: #bff1fc; /* storefront blue */
+  padding: 50px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  margin: 40px auto;
+  max-width: 600px;
+}
+
+.empty-cart-emoji {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.empty-cart h2 {
+  color: #5c6bc0; /* storefront blue accent */
+  margin-bottom: 10px;
+}
+
+.empty-cart p {
+  color: #555;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.empty-cart .btn {
+  background-color: #ffcfef; /* navbar pink */
+  color: #333;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  border: 1px solid #e1c7d8;
+  transition: background-color 0.3s ease;
+}
+
+.empty-cart .btn:hover {
+  background-color: #e1c7d8; /* hover pink */
+}
+
+@media (max-width: 768px) {
+  .shopingcart-table {
+    border: 0;
+  }
+
+  /* Hide the table header */
+  .shopingcart-table thead {
+    display: none;
+  }
+
+  /* Make each row a block with margin */
+  .shopingcart-table tbody tr {
+    display: block;
+    margin-bottom: 20px;
+    background: #bff1fc; /* light blue card background */
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  }
+
+  /* Each cell becomes a flex row */
+  .shopingcart-table tbody tr td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
     border: none;
-    outline: none;
-    transition: background-color 0.3s ease;
+    text-align: right;
   }
-  
-  .checkout-btn:hover {
-    background-color: #5742c1;
+
+  /* First cell with image and product name aligned left */
+  .shopingcart-table tbody tr td:first-child {
+    justify-content: flex-start;
   }
-  
-  .checkout-btn:focus {
-    outline: none;
-    box-shadow: 0 0 0 4px rgba(86, 66, 192, 0.6);
+
+  /* Product image smaller and with margin */
+  .shopingcart-item-img {
+    max-width: 60px;
+    margin-right: 12px;
+    flex-shrink: 0;
   }
-  
+
+  /* Quantity input smaller */
+  .shopingcart-table input[type="number"] {
+    width: 50px;
+    font-size: 1rem;
+    padding: 6px 8px;
+  }
+
+  /* Update button next to quantity with small margin */
+  .shopingcart-table button[type="submit"] {
+    margin-left: 8px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+
+  /* Remove button bigger for touch */
+  .shopingcart-table td:last-child form button {
+    font-size: 1.5rem;
+    padding: 6px 8px;
+  }
+
+  /* Total price bigger and centered */
+  .cart-total {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-top: 30px;
+  }
+
+  /* Checkout button full width on mobile */
+  .checkout-btn {
+    width: 90%;
+    padding: 14px 0;
+    font-size: 1.1rem;
+    margin: 20px auto 0;
+    display: block;
+    text-align: center;
+  }
+}

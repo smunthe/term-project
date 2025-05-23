@@ -1,3 +1,4 @@
+
 /* GENERAL PAGE CONTAINER */
 body {
   font-family: Arial, sans-serif;
@@ -6,7 +7,6 @@ body {
   padding: 0;
 }
 
-/* NAVBAR */
 .top-nav {
   display: flex;
   justify-content: space-between;
@@ -17,27 +17,66 @@ body {
   color: #333;
 }
 
+h1 {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+
+.logo {
+  flex: 1;            /* let logo take available space */
+  display: flex;
+  justify-content: center; /* center the logo */
+}
+
 .logo img {
   max-height: 40px;
   width: auto;
   display: block;
 }
 
-.icons button,
 .menu-btn {
   background: none;
   border: none;
-  font-size: 18px;
+  font-size: 24px;
   cursor: pointer;
   color: #333;
+  flex: 0 0 auto;
+  margin-right: 10px;
 }
 
-/* DROPDOWN MENU */
+.icons {
+  display: flex;
+  gap: 16px;           /* space between icons */
+  flex: 0 0 auto;
+}
+
+.icons a {
+  font-size: 20px;
+  color: #333;
+  text-decoration: none;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+.icons a:hover,
+.icons a:focus {
+  color: #5c6bc0;
+  outline: none;
+}
+
+/* Dropdown styles stay unchanged */
 .dropdown-menu {
   position: absolute;
-  top: 100%; /* position right below navbar */
+  top: 100%;
   left: 0;
-  background-color: #f7e6f1;  /* lighter than navbar for contrast */
+  background-color: #f7e6f1;
   width: 200px;
   display: none;
   flex-direction: column;
@@ -60,69 +99,98 @@ body {
   background-color: #e1c7d8;
 }
 
-/* PRODUCT GRID */
+/* Title */
+.storefront-title {
+  text-align: center;
+  font-size: 3rem;
+  font-weight: 800;
+  color: #4a3fa0; /* dark purple, matches your theme */
+  margin: 40px 0 60px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+}
+
+/* Grid container */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);  /* 3 columns */
-  gap: 32px;
-  padding: 30px;
-  max-width: 1200px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 30px;
+  padding: 0 20px 60px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
+/* Individual product card */
 .product-card {
-  background-color: #fff;
-  text-align: center;
-  padding: 12px;
-  border-radius: 10px;
-  box-shadow: none;     /* remove shadow for clean look */
-  border: none;
-  height: auto;
+  background: #bff1fc; /* pink navbar tone */
+  border-radius: 16px;
+  box-shadow: 0 6px 15px rgba(180, 80, 110, 0.15);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
 
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(180, 80, 110, 0.3);
+}
+
+/* Product image */
 .product-image {
   width: 100%;
-  height: 20px;
-  /* max-height: 220px; */
-  object-fit: contain;
-  margin-bottom: 12px;
-}
-
-.product-card h3 {
-  font-size: 16px;
-  font-weight: bold;
-  margin: 6px 0 2px;
-}
-
-.product-card p.description {
-  font-size: 14px;
-  color: #444;
-  margin: 0;
-}
-
-.product-card p.price {
-  font-size: 15px;
-  font-weight: 600;
-  margin: 8px 0 0;
-}
-
-/* Header spacing */
-h1 {
-  text-align: center;
-  font-size: 28px;
-  margin: 30px 0 10px;
-}
-
-p {
-  text-align: center;
-  font-size: 16px;
-  margin-bottom: 30px;
-}
-
-#pfpImage {
-  height: 30px;
-  width: 30px;
-  border-radius: 50%;
+  max-width: 220px;
+  height: 180px;
   object-fit: cover;
-  border: 2px solid #c3baff;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
 }
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+/* Product name */
+.product-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #4a3fa0;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+/* Price styling */
+.price {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #be669f; /* deep pink */
+  background: #fff5fb;
+  padding: 6px 14px;
+  border-radius: 12px;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+  transition: background-color 0.3s ease;
+}
+
+.product-card:hover .price {
+  background-color: #ffe6f2;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 20px;
+    padding: 0 10px 40px;
+  }
+
+  .product-image {
+    height: 140px;
+  }
+}
+

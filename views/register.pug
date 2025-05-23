@@ -1,8 +1,10 @@
 extends layout
+
 block styles
-    link(rel="stylesheet", href="/newUser.css")
+  link(rel="stylesheet", href="/newUser.css")
+
 block content
-  body
+  main
     h1 Create a New Account
 
     form#registerForm
@@ -35,8 +37,6 @@ block content
       input#confirmPassword(type="password", name="confirmPassword", required=true)
 
       .buttonContainer
-        button(type="submit") Login
-
-   
+        button(type="submit") Register
 
     script(src="/userScript.js")

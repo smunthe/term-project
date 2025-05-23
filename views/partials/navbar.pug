@@ -6,12 +6,13 @@ header.top-nav
       img(src="/assets/logo1.png", alt="logo")
 
   .icons
-    button(onclick="location.href='/search.html'") 🔍
-    button(onclick="location.href='/shopingcart'") 🛒
+    a(href="/search.html", aria-label="Search") 🔍
+    a(href="/shopingcart", aria-label="Shopping Cart") 🛒
 
   nav#menu.dropdown-menu(style="display: none;")
     a(href="/") 🏠 Go to Home
     a(href="/") 🛍️ Products
+    a(href="/about") 🤔 About 
 
     if user
       a(href="/profile") 👤 Profile

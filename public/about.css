@@ -1,0 +1,167 @@
+/* dreams.css — a splash of style for your surreal corporation */
+
+body {
+  background: linear-gradient(135deg, #fff9c4, #ffcfef); /* soft yellow to soft pink */
+  font-family: 'Poppins', sans-serif;
+  color: #3f51b5; /* medium-dark blue for readability */
+  margin: 0;
+  padding: 0;
+}
+
+/* Headings with dreamy vibes */
+h1, h2 {
+  font-weight: 700;
+  color: #303f9f; /* slightly darker blue for headings */
+}
+
+p {
+  font-size: 1.1rem;
+  color: #283593; /* darker blue for paragraphs */
+}
+
+/* Values List */
+ul.list-group-flush li {
+  font-size: 1.05rem;
+  transition: transform 0.3s ease;
+  color: #3f51b5;
+}
+
+ul.list-group-flush li:hover {
+  transform: translateX(5px);
+}
+
+/* Accordion (FAQs) */
+#faqAccordion {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.accordion-item {
+  border: none;
+  background: transparent;
+  margin-bottom: 0.75rem;
+}
+
+.accordion-header {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.accordion-button {
+  font-size: 1.25rem;
+  font-weight: 600;
+  background: transparent;
+  color: #3f51b5;
+  padding: 1rem 1.25rem;
+  border: none;
+  box-shadow: none;
+  transition: background 0.3s ease;
+}
+
+.accordion-button:hover {
+  background: #fce4ec; /* very light pink on hover */
+}
+
+.accordion-button:not(.collapsed) {
+  background: #fce4ec;
+  color: #212121;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+  outline: none;
+}
+
+.accordion-collapse {
+  border-top: none;
+}
+
+.accordion-body {
+  background: transparent;
+  font-style: italic;
+  color: #283593; /* darker blue */
+  padding: 1rem 1.25rem;
+  border-left: 4px solid #f8bbd0; /* soft pink border */
+  margin-top: -0.5rem;
+}
+
+/* Back to home button */
+a.btn-outline-primary {
+  border-color: #3f51b5;
+  color: #3f51b5;
+  transition: all 0.3s ease;
+}
+
+a.btn-outline-primary:hover {
+  background-color: #3f51b5;
+  color: white;
+}
+
+/* Section spacing */
+.container {
+  padding-top: 0.5rem;
+  padding-bottom: 4rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* Divider line */
+hr.my-5 {
+  border-top: 2px dashed #f8bbd0;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Text selection */
+::selection {
+  background: #fce4ec;
+  color: #000;
+}
+
+/* Login form styles */
+#loginForm {
+  background-color: #fff9c4; /* soft yellow */
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  width: 300px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  color: #303f9f;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background-color: #3f51b5; /* blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #283593; /* darker blue on hover */
+}

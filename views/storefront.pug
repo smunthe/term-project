@@ -6,6 +6,7 @@ block content
     each product in products
       .product-card
         a(href=`/product/${product.id}`)
-          img(src=product.image, alt=product.name, style="width:20vw; height:auto; object-fit:contain;")
+          img.product-image(src=product.image, alt=product.name)
           h3= product.name
-          p $#{product.price}
+          p.price $#{product.price}
+          

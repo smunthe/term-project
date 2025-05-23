@@ -4,23 +4,24 @@ block styles
   link(rel="stylesheet", href="/productStyle.css") 
 
 block content
-  .container
-    .column
+  .product-page
+    .image-container
       img.product-img(src=productImage alt=productName)
-    .column.description
-      h2= productName
-      p= productDescription
-    .column.buying
-      form(method="POST" action="/shopingcart/add")
+    .info-container
+      h2.product-title= productName
+      p.product-description= productDescription
+      
+      form.buying-form(method="POST" action="/shopingcart/add")
         input(type="hidden" name="productId" value=productId)
-        
+
         label(for='quantity') Quantity:
         input#quantity(type='number' name='quantity' value='1' min='1' required)
-        
-        label(for='customization') Customization:
-        input#customization(type='text' name='customization' placeholder='custom dream')
 
-        label Price:
-        p.price-text $#{productPrice}
+        label(for='customization') Customization:
+        input#customization(type='text' name='customization' placeholder='Custom dream...')
+
+        div.price-label
+          label Price:
+          span.price-text $#{productPrice}
 
         button(type='submit') Add to Cart
