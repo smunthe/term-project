@@ -179,6 +179,7 @@ db.run(`CREATE TABLE IF NOT EXISTS Users (
   pfp TEXT DEFAULT 'empty', 
   paymentMethod TEXT DEFAULT 'empty', 
   wishList TEXT DEFAULT '[]', 
+  cartItems TEXT DEFAULT '[]',
   previouslyOrdered TEXT DEFAULT '[]'
 )`, (err) => {
   if (err) return console.error("Error creating table: ", err.message);
@@ -247,13 +248,13 @@ app.get('/product/:id', (req, res) => {
 app.get('/login', (req, res) => {
   res.render('login', {
     title: 'Login Page',
-    user: req.session.user || null // ✅ Add this
+    user: req.session.user || null 
   });
 });
 
 app.get('/register', (req, res) => {
   res.render('register', {
-    user: req.session.user || null // ✅ Add this
+    user: req.session.user || null 
   });
 });
 
@@ -281,7 +282,8 @@ app.post('/register', (req, res) => {
         shippingAddress: row.shippingAddress,
         paymentMethod: row.paymentMethod,
         pfp: row.pfp || '/default-pfp.png',
-        previouslyOrdered: row.previouslyOrdered
+        previouslyOrdered: row.previouslyOrdered,
+        cartItems: row.cartItems || '[]'
       };
 
       res.status(201).json({ success: true });
@@ -303,7 +305,8 @@ app.post('/login', (req, res) => {
       shippingAddress: row.shippingAddress,
       paymentMethod: row.paymentMethod,
       pfp: row.pfp || '/default-pfp.png',
-      previouslyOrdered: row.previouslyOrdered
+      previouslyOrdered: row.previouslyOrdered,
+      cartItems: row.cartItems || '[]'
     };
 
     console.log("✅ SESSION SET:", req.session);
@@ -313,6 +316,8 @@ app.post('/login', (req, res) => {
 
 app.get('/profile', checkLogin, (req, res) => {
   const username = req.session.user.username;
+  const favoriteIds = [...new Set(JSON.parse(req.session.user.wishList || '[]'))];
+  const favoriteProducts = products.filter(p => favoriteIds.includes(p.id));
 
   db.get("SELECT previouslyOrdered FROM Users WHERE userName = ?", [username], (err, row) => {
     if (err) {
@@ -330,7 +335,8 @@ app.get('/profile', checkLogin, (req, res) => {
     res.render('profile', {
       title: 'Your Profile',
       user: req.session.user,
-      orders
+      orders,
+      favoriteProducts // ✅ new variable
     });
   });
 });
@@ -448,8 +454,9 @@ app.post('/checkout', (req, res) => {
   db.get("SELECT previouslyOrdered FROM Users WHERE userName = ?", [username], (err, row) => {
     if (err) return res.status(500).send("Database error");
 
-    let prevOrders = [];
+    let cart = [], prevORders = [];
     try {
+      cart = JSON.parse(row.cartItems || '[]');
       prevOrders = JSON.parse(row.previouslyOrdered || '[]');
     } catch (e) {
       console.error("❌ Order parse failed:", e);
@@ -463,14 +470,17 @@ app.post('/checkout', (req, res) => {
 
     const updatedOrders = [newOrder, ...prevOrders]; // newest first
 
-    db.run("UPDATE Users SET previouslyOrdered = ? WHERE userName = ?", [JSON.stringify(updatedOrders), username], err => {
+    db.run(
+    `UPDATE Users SET previouslyOrdered = ?, cartItems = '[]' WHERE userName = ?`,
+    [JSON.stringify(newOrders), username],
+    err => {
       if (err) return res.status(500).send("Failed to save order");
 
-      req.session.shopingcart = [];
-      req.session.user.previouslyOrdered = JSON.stringify(updatedOrders);
-
+      req.session.user.previouslyOrdered = JSON.stringify(newOrders);
+      req.session.user.cartItems = '[]'; // optional if you still track this
       res.redirect('/profile');
-    });
+    }
+    );
   });
 });
 
