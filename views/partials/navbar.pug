@@ -12,17 +12,17 @@ header.top-nav
   nav#menu.dropdown-menu(style="display: none;")
     a(href="/") 🏠 Go to Home
     a(href="/") 🛍️ Products
-    a(href="/profile") 👤 Profile
-    a(href="/settings") ⚙️ Settings
-    a(href="/about") ℹ️ About
-    a(href="/login") 🚪 Log Out
+
+    if user
+      a(href="/profile") 👤 Profile
+      a(href="/settings") ⚙️ Settings
+      a(href="/logout") 🚪 Log Out
+    else
+      a(href="/login") 🔑 Log In
+      a(href="/register") 📝 Register
 
 script.
   function toggleMenu() {
     const menu = document.getElementById("menu");
-    if (menu.style.display === "block") {
-      menu.style.display = "none";
-    } else {
-      menu.style.display = "block";
-    }
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
   }

@@ -170,26 +170,25 @@ const upload = multer({ storage });
 app.get('/', (req, res) => {
   res.render('storefront', {
     title: 'DreamStore',
-    products
+    products,
+    user: req.session.user || null // ✅ Add this
   });
 });
-
 // 🆕 Dynamic route for product pages
 app.get('/product/:id', (req, res) => {
   const id = parseInt(req.params.id);
   const product = products.find(p => p.id === id);
 
-  if (!product) {
-    return res.status(404).send("Product not found");
-  }
+  if (!product) return res.status(404).send("Product not found");
 
   res.render('product', {
     pageTitle: product.name,
-    productId: product.id,          // <-- Add this line
+    productId: product.id,
     productName: product.name,
     productImage: product.image,
     productDescription: product.description,
-    productPrice: product.price
+    productPrice: product.price,
+    user: req.session.user || null // ✅ Add this
   });
 });
 
@@ -198,11 +197,16 @@ app.get('/product/:id', (req, res) => {
 // });
 
 app.get('/login', (req, res) => {
-  res.render('login', { title: 'Login Page' });
+  res.render('login', {
+    title: 'Login Page',
+    user: req.session.user || null // ✅ Add this
+  });
 });
 
 app.get('/register', (req, res) => {
-  res.render('register'); // This assumes your file is views/newUser.pug
+  res.render('register', {
+    user: req.session.user || null // ✅ Add this
+  });
 });
 
 app.post('/register', (req, res) => {
@@ -321,12 +325,11 @@ app.get('/api/session', (req, res) => {
 });
 
 app.get('/shopingcart', (req, res) => {
-  if (!req.session.user) {
-    return res.redirect('/login');
-  }
+  if (!req.session.user) return res.redirect('/login');
 
   res.render('shopingcart', {
-    shopingcart: req.session.shopingcart || []
+    shopingcart: req.session.shopingcart || [],
+    user: req.session.user || null // ✅ Add this
   });
 });
 
@@ -371,6 +374,15 @@ app.post('/shopingcart/add', (req, res) => {
   res.redirect('/shopingcart');
 });
 
+app.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Logout error:', err);
+      return res.status(500).send('Could not log out.');
+    }
+    res.redirect('/');
+  });
+});
 
 
 // Start the server
