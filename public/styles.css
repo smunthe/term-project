@@ -182,6 +182,16 @@ h1 {
   background-color: #ffe6f2;
 }
 
+.site-footer {
+  background-color: #ffe4ec;
+  padding: 20px;
+  text-align: center;
+  color: #444;
+  font-size: 14px;
+  border-top: 1px solid #ffb3d1;
+  margin-top: 40px;
+}
+
 /* Responsive tweaks */
 @media (max-width: 600px) {
   .product-grid {
@@ -195,12 +205,3 @@ h1 {
   }
 }
 
-.site-footer {
-  background-color: #ffe4ec;
-  padding: 20px;
-  text-align: center;
-  color: #444;
-  font-size: 14px;
-  border-top: 1px solid #ffb3d1;
-  margin-top: 40px;
-}
