@@ -80,6 +80,28 @@ body {
     object-fit: cover;
     margin-right: 15px;
   }
+
+  .order-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+
+  /*
+  username: happyjacky81
+
+  email
+
+  happyjacky81@gmail.com
+
+  first: jack
+
+  last: doe
+  pass: 89lol
+
+  */
   
   .view-all {
     display: inline-block;

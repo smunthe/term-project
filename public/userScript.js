@@ -23,25 +23,11 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
       const data = await response.json();
       console.log('Registration success:', data);
       alert('User registered successfully!');
-      window.location.href = '/profile?username=${encodeURIComponent(data.username)}';
+      window.location.href = '/profile';
+
   } catch (error) {
       console.error('Registration error:', error);
       alert('Registration failed!');
   }
 });
 
-document.getElementById('displayBtn').addEventListener('click', async () => {
-  try {
-      console.log('Fetching users...'); // Debug log
-      const response = await fetch('http://localhost:3000/newUser');
-      if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const users = await response.json();
-      console.log('Received users:', users); // Debug log
-      document.getElementById('userDisplay').textContent = JSON.stringify(users, null, 2);
-  } catch (error) {
-      console.error('Error fetching users:', error);
-      document.getElementById('userDisplay').textContent = 'Error loading users: ' + error.message;
-  }
-});

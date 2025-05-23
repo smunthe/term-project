@@ -1,5 +1,7 @@
-//- product.pug
 extends layout
+
+block styles
+  link(rel="stylesheet", href="/productStyle.css") 
 
 block content
   .container
@@ -9,15 +11,16 @@ block content
       h2= productName
       p= productDescription
     .column.buying
-      label(for='quantity') Quantity:
-      input#quantity(type='number' name='quantity' value='1' min='1')
-      
-      //- testing block
-      label(for='customization') Customization:
-      input#customization(type='text' name='customization' placeholder='custom dream')
+      form(method="POST" action="/shopingcart/add")
+        input(type="hidden" name="productId" value=productId)
+        
+        label(for='quantity') Quantity:
+        input#quantity(type='number' name='quantity' value='1' min='1' required)
+        
+        label(for='customization') Customization:
+        input#customization(type='text' name='customization' placeholder='custom dream')
 
-      label Price:
-      p.price-text $#{productPrice}
+        label Price:
+        p.price-text $#{productPrice}
 
-      button(type='button') Add to Cart
-      button(type='button') Add to Wishlist
+        button(type='submit') Add to Cart

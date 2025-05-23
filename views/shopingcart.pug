@@ -1,0 +1,35 @@
+extends layout
+
+block styles
+  link(rel="stylesheet", href="/shopingcart.css")
+
+block content
+  h1 Your Shopping Cart
+
+  if shopingcart && shopingcart.length
+    table.shopingcart-table
+      thead
+        tr
+          th Product
+          th Price
+          th Quantity
+          th Total
+          th Remove
+      tbody
+        each item in shopingcart
+          tr
+            td
+              img.shopingcart-item-img(src=item.image, alt=item.name, style="width:80px; height:auto; object-fit:contain;")
+              | #{item.name}
+            td $#{item.price.toFixed(2)}
+            td #{item.quantity}
+            td $#{(item.price * item.quantity).toFixed(2)}
+            td
+              form(method="POST", action=`/shopingcart/remove`)
+                input(type="hidden" name="productId" value=item.id)
+                button(type="submit") ✖
+    h3 Total: $#{shopingcart.reduce((sum, i) => sum + i.price * i.quantity, 0).toFixed(2)}
+    a(href="/checkout") Proceed to Checkout
+  else
+    p Your cart is empty.
+    a(href="/") Continue Shopping

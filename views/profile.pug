@@ -18,7 +18,14 @@ block content
 
     section.recent-orders
       h3 Recently Purchased
-      #orderList
+      if orders.length
+        ul#orderList
+          each item in orders
+            li.order-item
+              img(src=item.image, alt=item.name, width="50")
+              span #{item.name} × #{item.quantity} — $#{item.price}
+      else
+        p No recent purchases yet.
       a.view-all(href="/orders") 🌙 View All Dream Orders
 
     section.favorites

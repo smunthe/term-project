@@ -1,0 +1,42 @@
+extends layout
+block styles
+    link(rel="stylesheet", href="/newUser.css")
+block content
+  body
+    h1 Create a New Account
+
+    form#registerForm
+      label(for="username") Username:
+      input#username(type="text", name="username", required=true)
+      br
+      br
+
+      label(for="email") Email:
+      input#email(type="email", name="email", required=true)
+      br
+      br
+
+      label(for="firstName") First Name:
+      input#firstName(type="text", name="firstName", required=true)
+      br
+      br
+
+      label(for="lastName") Last Name:
+      input#lastName(type="text", name="lastName", required=true)
+      br
+      br
+
+      label(for="password") Password:
+      input#password(type="password", name="password", required=true)
+      br
+      br
+
+      label(for="confirmPassword") Confirm Password:
+      input#confirmPassword(type="password", name="confirmPassword", required=true)
+
+      .buttonContainer
+        button(type="submit") Login
+
+   
+
+    script(src="/userScript.js")

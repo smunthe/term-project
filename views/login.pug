@@ -1,13 +1,8 @@
-doctype html
-html(lang="en")
-  head
-    meta(charset="UTF-8")
-    meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    title Login Page
-    link(rel="stylesheet", href="login.css")
+extends layout
+block styles
+  link(rel="stylesheet", href="/login.css") 
 
-  body
-    include ./partials/navbar.pug 
+block content
 
     h1 Login
 
@@ -22,33 +17,6 @@ html(lang="en")
       br
       .buttonContainer
         button(type="submit") Login
-      button#newUser(type="button", onclick="window.location.href ='newUser.html'") New user? Click here
-
-    script.
-      document.getElementById("loginForm").addEventListener("submit", async function (e) {
-        e.preventDefault();
-        const payload = {
-          username: document.getElementById("username").value,
-          password: document.getElementById("password").value
-        };
-
-        try {
-          const res = await fetch("/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify(payload)
-          });
-
-          const data = await res.json();
-          if (data.success) {
-            console.log("✅ Login worked. Redirecting...");
-            window.location.href = "/profile";
-          } else {
-            alert("Login failed");
-          }
-        } catch (err) {
-          console.error("Login error:", err);
-          alert("Login error");
-        }
-      });
+      button#newUser(type="button", onclick="window.location.href ='/register'") New user? Click here
+    script(src="/loginScript.js")
+      

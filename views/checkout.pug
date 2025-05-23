@@ -1,0 +1,18 @@
+extends layout
+
+block styles
+  link(rel="stylesheet", href="/shopingcart.css")
+
+block content
+  .checkout-container
+    h2 Checkout
+    if cart.length
+      ul
+        each item in cart
+          li
+            img(src=item.image, width="50")
+            span #{item.name} × #{item.quantity} — $#{item.price}
+      form(action="/checkout", method="POST")
+        button(type="submit") 💳 Complete Purchase
+    else
+      p Your cart is empty.

@@ -29,17 +29,37 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
+// 🔄 Product data - used for both homepage and dynamic product pages
+const products = [
+  { id: 1, name: 'Dream House', image: '/assets/productImages/dreamHouse.png', description: 'A cozy retreat built from imagination.', price: 20 },
+  { id: 2, name: 'Dream Car', image: '/assets/productImages/DreamCar.png', description: 'Runs on sparkles and clouds.', price: 100 },
+  { id: 3, name: 'Dream Pet', image: '/assets/productImages/DreamPet.png', description: 'Your cuddliest companion yet.', price: 15 },
+  { id: 4, name: 'Dream Partner', image: '/assets/productImages/DreamPartner.png', description: 'Someone who understands your vibes.', price: 25 },
+  { id: 5, name: 'Dream Job', image: '/assets/productImages/DreamJob.png', description: 'Work without burnout or meetings.', price: 35 },
+  { id: 6, name: 'Dream Career', image: '/assets/productImages/DreamCareer.png', description: 'Ocean breeze & pastel skies.', price: 50 },
+  { id: 7, name: 'Dream Scenario', image: '/assets/productImages/DreamScenario.png', description: 'Always fits, always cute.', price: 18 },
+  { id: 8, name: 'Healing Nightmares', image: '/assets/productImages/HealingNightmare.png', description: 'No tests, just fun learning.', price: 40 },
+  { id: 9, name: 'Retrieve Dream', image: '/assets/productImages/RetrieveDream.png', description: 'That perfect moment, on repeat.', price: 22 },
+  { id: 10, name: 'Nightmare Protection', image: '/assets/productImages/NightmareProtection.png', description: 'Sleep peacefully, always.', price: 10 },
+  { id: 11, name: 'Nightmare Roulette', image: '/assets/productImages/RouletteNightmare.png', description: 'Spin your fate.', price: 60 },
+  { id: 12, name: 'Send a Nightmare', image: '/assets/productImages/SendNightmare.png', description: 'A spooky surprise for your enemy.', price: 30 }
+];
 
 // the about page
 
 app.get('/about', (req, res) => {
-    res.render('about', {
-      pageTitle: 'About Us',
-      stylesheet: '/styles.css', // or your custom about page style
-      user: req.session.user || null
-    });
+  const faqs = [
+    { question: 'What is your return policy?', answer: 'You cant return dreams therefore no returns are accepted' },
+    { question: 'Do you offer international shipping?', answer: 'Yes, they are dreams so as long as you are asleep or your enemy.' },
+    { question: 'How can I contact customer support?', answer: 'Meditate under the sun with a top hat' }
+  ];
+
+  res.render('about', {
+    pageTitle: 'About Us',
+    faqs,
+    user: req.session.user || null
   });
-  
+});
 
 
 //for nightmare it should be the same
@@ -63,31 +83,31 @@ app.get('/about', (req, res) => {
 
 // Product page route
 
-app.get('/product1', (req, res) => {
-  res.render('product', {
-    pageTitle: 'Dream House',
-    productName: 'Dream House',
-    // here goes the image just change after productImages
-    productImage: '/assets/productImages/DreamHouse.png',
-    //descption here any new proccut just copy and paste
-    productDescription: 'edit here',
+// app.get('/product1', (req, res) => {
+//   res.render('product', {
+//     pageTitle: 'Dream House',
+//     productName: 'Dream House',
+//     // here goes the image just change after productImages
+//     productImage: '/assets/productImages/DreamHouse.png',
+//     //descption here any new proccut just copy and paste
+//     productDescription: 'edit here',
 
-    productPrice: 20,
+//     productPrice: 20,
 
-    stylesheet: '/productStyle.css'
-  });
-});
+//     stylesheet: '/productStyle.css'
+//   });
+// });
 
 
-app.get('/product2', (req, res) => {
-  res.render('product', {
-    pageTitle: 'DreamCar',
-    productName: 'DreamCar',
-    productImage: '/assets/productImages/DreamCar.png',
-    productDescription: 'edit here',
-    stylesheet: '/productStyle.css' 
-  });
-});
+// app.get('/product2', (req, res) => {
+//   res.render('product', {
+//     pageTitle: 'DreamCar',
+//     productName: 'DreamCar',
+//     productImage: '/assets/productImages/DreamCar.png',
+//     productDescription: 'edit here',
+//     stylesheet: '/productStyle.css' 
+//   });
+// });
   
 
 
@@ -148,40 +168,44 @@ const upload = multer({ storage });
 // Routes
 
 app.get('/', (req, res) => {
-  const featuredProducts = [
-    { id: 1, name: 'Dream House', image: '/assets/productImages/DreamHouse.png', description: 'A cozy retreat built from imagination.', price: 20 },
-    { id: 2, name: 'Dream Car', image: '/assets/productImages/DreamCar.png', description: 'Runs on sparkles and clouds.', price: 100 },
-    { id: 3, name: 'Dream Pet', image: '/assets/productImages/DreamPet.png', description: 'Your cuddliest companion yet.', price: 15 },
-    { id: 4, name: 'Dream Partner', image: '/assets/productImages/DreamPartner.png', description: 'Someone who understands your vibes.', price: 25 },
-    { id: 5, name: 'Dream Job', image: '/assets/productImages/DreamCareer.png', description: 'Work without burnout or meetings.', price: 35 },
-    { id: 6, name: 'Dream Vacation', image: '/assets/productImages/DreamVacation.png', description: 'Ocean breeze & pastel skies.', price: 50 },
-    { id: 7, name: 'Dream Outfit', image: '/assets/productImages/DreamOutfit.png', description: 'Always fits, always cute.', price: 18 },
-    { id: 8, name: 'Dream School', image: '/assets/productImages/DreamSchool.png', description: 'No tests, just fun learning.', price: 40 },
-    { id: 9, name: 'Dream Scenario', image: '/assets/productImages/DreamScenario.png', description: 'That perfect moment, on repeat.', price: 22 },
-    { id: 10, name: 'Nightmare Protection', image: '/assets/productImages/NightmareProtection.png', description: 'Sleep peacefully, always.', price: 10 },
-    { id: 11, name: 'Dream Phone', image: '/assets/productImages/DreamPhone.png', description: 'Infinite battery & dreamy apps.', price: 60 },
-    { id: 12, name: 'Dream Room', image: '/assets/productImages/DreamRoom.png', description: 'Your safe, sparkly space.', price: 30 },
-  ];
-
   res.render('storefront', {
     title: 'DreamStore',
-    products: featuredProducts
+    products,
+    user: req.session.user || null // ✅ Add this
   });
 });
+// 🆕 Dynamic route for product pages
+app.get('/product/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const product = products.find(p => p.id === id);
 
+  if (!product) return res.status(404).send("Product not found");
+
+  res.render('product', {
+    pageTitle: product.name,
+    productId: product.id,
+    productName: product.name,
+    productImage: product.image,
+    productDescription: product.description,
+    productPrice: product.price,
+    user: req.session.user || null // ✅ Add this
+  });
+});
 
 // app.get('/index', (req, res) => {
 //   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 // });
 
 app.get('/login', (req, res) => {
-  res.render('login', { title: 'Login Page' });
+  res.render('login', {
+    title: 'Login Page',
+    user: req.session.user || null // ✅ Add this
+  });
 });
 
 app.get('/register', (req, res) => {
-  db.all("SELECT * FROM Users", (err, rows) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(rows);
+  res.render('register', {
+    user: req.session.user || null // ✅ Add this
   });
 });
 
@@ -199,11 +223,24 @@ app.post('/register', (req, res) => {
     if (err) return res.status(500).json({ message: 'Insert failed', error: err });
 
     db.get("SELECT * FROM Users WHERE userName = ?", [username], (err, row) => {
-      if (err) return res.status(500).json({ message: 'Fetch after insert failed', error: err });
-      res.status(201).json(row);
+      if (err || !row) return res.status(500).json({ message: 'Fetch after insert failed', error: err });
+
+      // 🔐 Set up session
+      req.session.user = {
+        username: row.userName,
+        firstName: row.firstName,
+        email: row.email,
+        shippingAddress: row.shippingAddress,
+        paymentMethod: row.paymentMethod,
+        pfp: row.pfp || '/default-pfp.png',
+        previouslyOrdered: row.previouslyOrdered
+      };
+
+      res.status(201).json({ success: true });
     });
   });
 });
+
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
@@ -227,8 +264,77 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/profile', checkLogin, (req, res) => {
-  res.render('profile', { title: 'Your Profile', user: req.session.user });
+  const username = req.session.user.username;
+
+  db.get("SELECT previouslyOrdered FROM Users WHERE userName = ?", [username], (err, row) => {
+    if (err) {
+      console.error("❌ Failed to fetch previous orders:", err.message);
+      return res.status(500).send("Server error");
+    }
+
+    let orders = [];
+    try {
+      orders = JSON.parse(row.previouslyOrdered || '[]');
+    } catch (e) {
+      console.error("❌ Failed to parse previous orders:", e);
+    }
+
+    res.render('profile', {
+      title: 'Your Profile',
+      user: req.session.user,
+      orders
+    });
+  });
 });
+
+app.get('/checkout', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+  if (!req.session.shopingcart || req.session.shopingcart.length === 0) {
+    return res.redirect('/shopingcart');
+  }
+
+  res.render('checkout', {
+    title: 'Checkout',
+    cart: req.session.shopingcart,
+    user: req.session.user
+  });
+});
+
+
+app.post('/checkout', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+  const cart = req.session.shopingcart || [];
+
+  const username = req.session.user.username;
+
+  // Fetch existing orders
+  db.get("SELECT previouslyOrdered FROM Users WHERE userName = ?", [username], (err, row) => {
+    if (err) return res.status(500).send("Database error");
+
+    let prevOrders = [];
+    try {
+      prevOrders = JSON.parse(row.previouslyOrdered || '[]');
+    } catch (e) {
+      console.error("❌ Order parse failed:", e);
+    }
+
+    const newOrders = prevOrders.concat(cart);
+
+    db.run("UPDATE Users SET previouslyOrdered = ? WHERE userName = ?", [JSON.stringify(newOrders), username], err => {
+      if (err) return res.status(500).send("Failed to save order");
+
+      // Clear cart
+      req.session.shopingcart = [];
+
+      // Update session orders too
+      req.session.user.previouslyOrdered = JSON.stringify(newOrders);
+
+      res.redirect('/profile'); // ✅ Redirect to profile with updated order history
+    });
+  });
+});
+
+
 
 app.post('/upload-pfp', upload.single('pfp'), (req, res) => {
   if (!req.session.user) return res.status(401).send("Unauthorized");
@@ -243,27 +349,41 @@ app.post('/upload-pfp', upload.single('pfp'), (req, res) => {
   });
 });
 
-app.get('/product1', (req, res) => {
-  res.render('product', {
-    pageTitle: 'Dream House',
-    productName: 'Dream House',
-    productImage: '/assets/productImages/DreamHouse.png',
-    productDescription: 'edit here',
-    productPrice: 20,
-    stylesheet: '/productStyle.css'
+
+app.get('/settings', (req,res) => {
+    if (!req.session.user) return res.redirect('/login');
+    res.render('settings', {title: 'User Settings', user: req.session.user});
+
+});
+
+app.post('/settings', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+  
+  const { firstName, shippingAddress, email, paymentMethod } = req.body;
+  const username = req.session.user.username;
+
+  const updateQuery = `
+    UPDATE Users
+    SET firstName = ?, shippingAddress = ?, email = ?, paymentMethod = ?
+    WHERE userName = ?
+  `;
+
+  db.run(updateQuery, [firstName, shippingAddress, email, paymentMethod, username], function(err) {
+    if (err) {
+      console.error("❌ Failed to update user:", err.message);
+      return res.status(500).send("Failed to update settings");
+    }
+
+    // 🔄 Update the session so profile reflects changes
+    req.session.user.firstName = firstName;
+    req.session.user.shippingAddress = shippingAddress;
+    req.session.user.email = email;
+    req.session.user.paymentMethod = paymentMethod;
+
+    res.redirect('/profile'); // ✅ Go back to profile
   });
 });
 
-app.get('/product2', (req, res) => {
-  res.render('product', {
-    pageTitle: 'DreamCar',
-    productName: 'DreamCar',
-    productImage: '/assets/productImages/DreamCar.png',
-    productDescription: 'edit here',
-    productPrice: 100,
-    stylesheet: '/productStyle.css'
-  });
-});
 app.get('/api/session', (req, res) => {
   console.log("SESSION CHECK:", req.session); // 🔍 Watch this in terminal
   if (req.session.user) {
@@ -271,6 +391,66 @@ app.get('/api/session', (req, res) => {
   } else {
     res.status(401).json({ loggedIn: false });
   }
+});
+
+app.get('/shopingcart', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+
+  res.render('shopingcart', {
+    shopingcart: req.session.shopingcart || [],
+    user: req.session.user || null // ✅ Add this
+  });
+});
+
+
+app.post('/shopingcart/remove', (req, res) => {
+  const { productId } = req.body;
+
+  if (!req.session.shopingcart) {
+    return res.redirect('/shopingcart');
+  }
+
+  req.session.shopingcart = req.session.shopingcart.filter(item => item.id !== Number(productId));
+  res.redirect('/shopingcart');
+});
+
+
+app.post('/shopingcart/add', (req, res) => {
+  const { productId, quantity, customization } = req.body;
+  const product = products.find(p => p.id === Number(productId));
+
+  if (!product) return res.status(400).send('Invalid product');
+
+  if (!req.session.shopingcart) {
+    req.session.shopingcart = [];
+  }
+
+  const existingItem = req.session.shopingcart.find(item => item.id === product.id);
+
+  if (existingItem) {
+    existingItem.quantity += Number(quantity);
+  } else {
+    req.session.shopingcart.push({
+      id: product.id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      quantity: Number(quantity),
+      customization: customization || ''
+    });
+  }
+
+  res.redirect('/shopingcart');
+});
+
+app.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Logout error:', err);
+      return res.status(500).send('Could not log out.');
+    }
+    res.redirect('/');
+  });
 });
 
 
