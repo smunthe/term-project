@@ -49,9 +49,46 @@ const products = [
 
 app.get('/about', (req, res) => {
   const faqs = [
-    { question: 'What is your return policy?', answer: 'You cant return dreams therefore no returns are accepted' },
-    { question: 'Do you offer international shipping?', answer: 'Yes, they are dreams so as long as you are asleep or your enemy.' },
-    { question: 'How can I contact customer support?', answer: 'Meditate under the sun with a top hat' }
+    {
+      question: "What is your return policy?",
+      answer: "You can't return dreams. Trust us—we tried. All purchases are final, just like that embarrassing thing you did in 8th grade."
+    },
+    {
+      question: "Do you offer international shipping?",
+      answer: "Yes, our dreams transcend borders, time zones, and occasionally the laws of physics. If you're asleep, we ship."
+    },
+    {
+      question: "How can I contact customer support?",
+      answer: "Simply meditate under a full moon wearing a top hat and whisper your issue into the breeze. We’ll get back to you in 3–5 dream cycles."
+    },
+    {
+      question: "Can I customize my dream?",
+      answer: "Absolutely. Choose from our Dream Buffet™ — includes flying, underwater concerts, and awkward high school reunions."
+    },
+    {
+      question: "What if I accidentally dream about my ex?",
+      answer: "That’s on you. We recommend upgrading to our 'Exorcise the Ex' add-on package."
+    },
+    {
+      question: "Is there a warranty?",
+      answer: "Your dream comes with a 14-night no-reality-distortion guarantee. Side effects may include ambition and mild euphoria."
+    },
+    {
+      question: "Do your dreams work on pets?",
+      answer: "Yes. Side effects include tail wagging, uncontrollable purring, and dreaming of infinite bacon."
+    },
+    {
+      question: "Can I share a dream with a friend?",
+      answer: "Yes, but only if you're emotionally synced and have matching pajamas. That's just the policy."
+    },
+    {
+      question: "Are your dreams ethically sourced?",
+      answer: "100% certified cruelty-free and harvested sustainably from the subconscious minds of retired poets."
+    },
+    {
+      question: "Do you offer nightmares?",
+      answer: "Yes! For thrill-seekers only. Comes with built-in escape hatch and complimentary therapy suggestions."
+    }
   ];
 
   res.render('about', {
@@ -166,14 +203,26 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Routes
-
 app.get('/', (req, res) => {
+  const user = req.session.user || null;
+  let wishList = [];
+
+  if (user && user.wishList) {
+    try {
+      wishList = JSON.parse(user.wishList);
+    } catch {
+      wishList = [];
+    }
+  }
+
   res.render('storefront', {
     title: 'DreamStore',
     products,
-    user: req.session.user || null // ✅ Add this
+    user,
+    wishList
   });
 });
+
 // 🆕 Dynamic route for product pages
 app.get('/product/:id', (req, res) => {
   const id = parseInt(req.params.id);
@@ -292,6 +341,96 @@ app.get('/profile', checkLogin, (req, res) => {
   });
 });
 
+app.get('/orders', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+  const username = req.session.user.username;
+
+  db.get("SELECT previouslyOrdered FROM Users WHERE userName = ?", [username], (err, row) => {
+    if (err) return res.status(500).send("Database error");
+
+    let orders = [];
+    try {
+      orders = JSON.parse(row.previouslyOrdered || '[]');
+    } catch (e) {
+      console.error("❌ Order parse failed:", e);
+    }
+
+    res.render('orders', { orders });
+  });
+});
+
+
+app.get('/shopingcart', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+
+  res.render('shopingcart', {
+    shopingcart: req.session.shopingcart || [],
+    user: req.session.user || null // ✅ Add this
+  });
+});
+
+
+app.post('/shopingcart/remove', (req, res) => {
+  const { productId } = req.body;
+
+  if (!req.session.shopingcart) {
+    return res.redirect('/shopingcart');
+  }
+
+  req.session.shopingcart = req.session.shopingcart.filter(item => item.id !== Number(productId));
+  res.redirect('/shopingcart');
+});
+
+
+app.post('/shopingcart/add', (req, res) => {
+  const { productId, quantity, customization } = req.body;
+  const product = products.find(p => p.id === Number(productId));
+
+  if (!product) return res.status(400).send('Invalid product');
+
+  if (!req.session.shopingcart) {
+    req.session.shopingcart = [];
+  }
+
+  const existingItem = req.session.shopingcart.find(item => item.id === product.id);
+
+  if (existingItem) {
+    existingItem.quantity += Number(quantity);
+  } else {
+    req.session.shopingcart.push({
+      id: product.id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      quantity: Number(quantity),
+      customization: customization || ''
+    });
+  }
+
+  res.redirect('/shopingcart');
+});
+
+// POST /shopingcart/update
+app.post('/shopingcart/update', express.urlencoded({ extended: true }), (req, res) => {
+  const { productId, quantity } = req.body;
+  const qty = parseInt(quantity);
+
+  if (!req.session.shopingcart) req.session.shopingcart = [];
+
+  const itemIndex = req.session.shopingcart.findIndex(item => String(item.id) === String(productId));
+  if (itemIndex === -1) {
+    return res.redirect('/shopingcart'); // or handle error however you want
+  }
+
+  if (isNaN(qty) || qty < 1) {
+    return res.redirect('/shopingcart');
+  }
+
+  req.session.shopingcart[itemIndex].quantity = qty;
+
+  res.redirect('/shopingcart');  // Redirect back to cart page
+});
+
 app.get('/checkout', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
   if (!req.session.shopingcart || req.session.shopingcart.length === 0) {
@@ -308,7 +447,9 @@ app.get('/checkout', (req, res) => {
 
 app.post('/checkout', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
-  
+
+  const cart = req.session.shopingcart || [];
+  const username = req.session.user.username;
 
   db.get("SELECT previouslyOrdered FROM Users WHERE userName = ?", [username], (err, row) => {
     if (err) return res.status(500).send("Database error");
@@ -321,7 +462,13 @@ app.post('/checkout', (req, res) => {
       console.error("❌ Order parse failed:", e);
     }
 
-    const newOrders = prevOrders.concat(cart);
+    // Create a new grouped order with date
+    const newOrder = {
+      date: new Date().toISOString().split('T')[0], // "YYYY-MM-DD"
+      items: cart
+    };
+
+    const updatedOrders = [newOrder, ...prevOrders]; // newest first
 
     db.run(
     `UPDATE Users SET previouslyOrdered = ?, cartItems = '[]' WHERE userName = ?`,
@@ -336,8 +483,6 @@ app.post('/checkout', (req, res) => {
     );
   });
 });
-
-
 
 app.post('/upload-pfp', upload.single('pfp'), (req, res) => {
   if (!req.session.user) return res.status(401).send("Unauthorized");
@@ -394,83 +539,6 @@ app.get('/api/session', (req, res) => {
   } else {
     res.status(401).json({ loggedIn: false });
   }
-});
-
-app.get('/shopingcart', (req, res) => {
-  if (!req.session.user) return res.redirect('/login');
-
-  const username = req.session.user.username;
-  db.get("SELECT cartItems FROM Users WHERE userName = ?", [username], (err, row) => {
-    if (err) return res.status(500).send("Database error loading cart");
-
-    let cart = [];
-    try {
-      cart = JSON.parse(row.cartItems || '[]');
-    } catch {
-      cart = [];
-    }
-
-    res.render('shopingcart', {
-      shopingcart: cart,
-      user: req.session.user
-    });
-  });
-});
-
-
-app.post('/shopingcart/remove', (req, res) => {
-  const { productId } = req.body;
-
-  if (!req.session.shopingcart) {
-    return res.redirect('/shopingcart');
-  }
-
-  // 🔻 Remove from session cart
-  req.session.shopingcart = req.session.shopingcart.filter(item => item.id !== Number(productId));
-
-  // 🧠 Save updated cart to DB
-  const updatedCart = JSON.stringify(req.session.shopingcart);
-  db.run("UPDATE Users SET cartItems = ? WHERE userName = ?", [updatedCart, req.session.user.username], err => {
-    if (err) console.error("❌ Failed to sync cart to DB:", err.message);
-  });
-
-  res.redirect('/shopingcart');
-});
-
-
-
-app.post('/shopingcart/add', (req, res) => {
-  const { productId, quantity, customization } = req.body;
-  const product = products.find(p => p.id === Number(productId));
-
-  if (!product) return res.status(400).send('Invalid product');
-
-  if (!req.session.shopingcart) {
-    req.session.shopingcart = [];
-  }
-
-  const existingItem = req.session.shopingcart.find(item => item.id === product.id);
-
-  if (existingItem) {
-    existingItem.quantity += Number(quantity);
-  } else {
-    req.session.shopingcart.push({
-      id: product.id,
-      name: product.name,
-      image: product.image,
-      price: product.price,
-      quantity: Number(quantity),
-      customization: customization || ''
-    });
-  }
-
-  // 🧠 Save updated cart to DB
-  const updatedCart = JSON.stringify(req.session.shopingcart);
-  db.run("UPDATE Users SET cartItems = ? WHERE userName = ?", [updatedCart, req.session.user.username], err => {
-    if (err) console.error("❌ Failed to sync cart to DB:", err.message);
-  });
-
-  res.redirect('/shopingcart');
 });
 
 app.get('/logout', (req, res) => {

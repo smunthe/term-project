@@ -13,13 +13,14 @@ async function loadSessionData() {
       window.location.href = '/login';
       return;
     }
-    document.body.style.backgroundColor = "#e3f2fd";
+    // Change to yellow (matches your CSS)
+    document.body.style.backgroundColor = "#FFFFDB";
     const user = data.user;
     console.log("✅ Session data loaded:", user);
     // Set Profile Header
     document.getElementById("profilePic").src = user.pfp || '/default-pfp.png';
-console.log("👀 Loaded user:", user);
-document.getElementById("profileName").textContent = user.firstName || "No name!";    document.getElementById("profileEmail").textContent = `Email: ${user.email}`;
+    console.log("👀 Loaded user:", user);
+    document.getElementById("profileName").textContent = user.firstName || "No name!";    document.getElementById("profileEmail").textContent = `Email: ${user.email}`;
 
     // Set Personal Info
     document.getElementById("profileAddress").textContent = `🏠 Address: ${user.shippingAddress}`;
@@ -35,15 +36,18 @@ document.getElementById("profileName").textContent = user.firstName || "No name!
       const div = document.createElement("div");
       div.className = "order";
       div.innerHTML = `
-        <img src="${order.image}" alt="${order.name}" />
+        <img src="${order.items[0].image}" alt="${order.items[0].name}" />
         <div>
-          <p><strong>${order.name}</strong></p>
-          <p>Purchased on: ${order.date}</p>
-          <p>Status: ${order.status}</p>
+          <p><strong>${order.items[0].name}</strong> × ${order.items[0].quantity}</p>
+          <p>$${order.items[0].price}</p>
+          <p>🗓️ ${order.date}</p>
+          <p>📦 Delivered! </p>
         </div>
       `;
       orderList.appendChild(div);
-    });
+    });    
+
+    
   } catch (e) {
     console.error("❌ Failed to parse previouslyOrdered JSON:", e);
   }

@@ -1,0 +1,26 @@
+extends layout
+
+block styles
+  link(rel="stylesheet", href="/orders.css") 
+
+block content
+  h1 All Your Dream Orders
+  .orders-container
+    if orders.length
+      each order, index in orders
+        .order-box
+          h3 🛍️ Order #{index + 1}
+          if order.date
+            p.date Ordered on: #{order.date}
+          .items
+            - const items = order.items || [order];
+            each item in items
+              .item
+                img(src=item.image, alt=item.name, width="60")
+                .info
+                  strong #{item.name}
+                  p Quantity: #{item.quantity}
+                  p $#{item.price}
+    else
+      p You haven’t placed any dream orders yet!
+  a.back-link(href="/profile") ← Back to Profile
