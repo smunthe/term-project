@@ -264,8 +264,77 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/profile', checkLogin, (req, res) => {
-  res.render('profile', { title: 'Your Profile', user: req.session.user });
+  const username = req.session.user.username;
+
+  db.get("SELECT previouslyOrdered FROM Users WHERE userName = ?", [username], (err, row) => {
+    if (err) {
+      console.error("❌ Failed to fetch previous orders:", err.message);
+      return res.status(500).send("Server error");
+    }
+
+    let orders = [];
+    try {
+      orders = JSON.parse(row.previouslyOrdered || '[]');
+    } catch (e) {
+      console.error("❌ Failed to parse previous orders:", e);
+    }
+
+    res.render('profile', {
+      title: 'Your Profile',
+      user: req.session.user,
+      orders
+    });
+  });
 });
+
+app.get('/checkout', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+  if (!req.session.shopingcart || req.session.shopingcart.length === 0) {
+    return res.redirect('/shopingcart');
+  }
+
+  res.render('checkout', {
+    title: 'Checkout',
+    cart: req.session.shopingcart,
+    user: req.session.user
+  });
+});
+
+
+app.post('/checkout', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+  const cart = req.session.shopingcart || [];
+
+  const username = req.session.user.username;
+
+  // Fetch existing orders
+  db.get("SELECT previouslyOrdered FROM Users WHERE userName = ?", [username], (err, row) => {
+    if (err) return res.status(500).send("Database error");
+
+    let prevOrders = [];
+    try {
+      prevOrders = JSON.parse(row.previouslyOrdered || '[]');
+    } catch (e) {
+      console.error("❌ Order parse failed:", e);
+    }
+
+    const newOrders = prevOrders.concat(cart);
+
+    db.run("UPDATE Users SET previouslyOrdered = ? WHERE userName = ?", [JSON.stringify(newOrders), username], err => {
+      if (err) return res.status(500).send("Failed to save order");
+
+      // Clear cart
+      req.session.shopingcart = [];
+
+      // Update session orders too
+      req.session.user.previouslyOrdered = JSON.stringify(newOrders);
+
+      res.redirect('/profile'); // ✅ Redirect to profile with updated order history
+    });
+  });
+});
+
+
 
 app.post('/upload-pfp', upload.single('pfp'), (req, res) => {
   if (!req.session.user) return res.status(401).send("Unauthorized");
