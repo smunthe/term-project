@@ -26,5 +26,23 @@ block content
     section.favorites
       h3 Favorites
       #favoritesGrid.favorites-grid
+        if favoriteProducts.length
+          each product in favoriteProducts
+            .favorite-item
+              img(src=product.image, alt=product.name)
+              p= product.name
+
+              // Add to Cart form
+              form(method="POST", action="/shopingcart/add")
+                input(type="hidden", name="productId", value=product.id)
+                input(type="hidden", name="quantity", value=1)
+                button(type="submit") 🛒 Add to Cart
+
+              // Remove from Wishlist form
+              form(method="POST", action="/favorites/toggle")
+                input(type="hidden", name="productId", value=product.id)
+                button(type="submit") ❌ Remove
+        else
+          p You haven't favorited anything yet.
 
     script(src="/profileScript.js")

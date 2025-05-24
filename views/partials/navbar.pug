@@ -1,4 +1,3 @@
-//- navar.pug 
 header.top-nav
   button.menu-btn(onclick="toggleMenu()") ☰
 
@@ -7,15 +6,13 @@ header.top-nav
       img(src="/assets/logo1.png", alt="logo")
 
   .icons
-    .search-container
-      button#searchToggle(type="button", aria-label="Toggle Search") 🔍
+    // Toggle input visibility with JS
+    button#searchToggle(type="button", aria-label="Toggle Search") 🔍
 
-      form#searchForm(method="GET", action="/search", style="display: none; flex-direction: column; position: absolute; right: 50px; background: white; padding: 10px; border-radius: 8px; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-width: 250px;")
-        .search-wrapper(style="position: relative; width: 100%;")
-          input#searchInput(type="text", name="q", placeholder="Search dreams...", required)
-          ul#searchSuggestions
-
-      a(href="/shopingcart", aria-label="Shopping Cart") 🛒
+    form#searchForm(method="GET", action="/search")
+      input#searchInput(type="text", name="q", placeholder="Search dreams...", required)
+      ul#searchSuggestions
+    a(href="/shopingcart", aria-label="Shopping Cart") 🛒
 
   nav#menu.dropdown-menu(style="display: none;")
     a(href="/") 🏠 Go to Home
