@@ -147,6 +147,20 @@ body > :not(.top-nav) {
   color: white;
 }
 
+.favorite-btn {
+  margin-top: 10px;
+  background-color: #ffe4ec;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.favorite-btn:hover {
+  background-color: #ffb3dc;
+} 
+
 /* RESPONSIVE */
 
 @media (max-width: 768px) {

@@ -7,21 +7,31 @@ block content
   .product-page
     .image-container
       img.product-img(src=productImage alt=productName)
+
     .info-container
       h2.product-title= productName
       p.product-description= productDescription
-      
+
       form.buying-form(method="POST" action="/shopingcart/add")
-        input(type="hidden" name="productId" value=productId)
+        input(type="hidden", name="productId", value=productId)
 
         label(for='quantity') Quantity:
-        input#quantity(type='number' name='quantity' value='1' min='1' required)
+        input#quantity(type='number', name='quantity', value='1', min='1', required)
 
         label(for='customization') Customization:
-        input#customization(type='text' name='customization' placeholder='Custom dream...')
+        input#customization(type='text', name='customization', placeholder='Custom dream...')
 
-        div.price-label
+        .price-label
           label Price:
           span.price-text $#{productPrice}
 
         button(type='submit') Add to Cart
+
+      // 💖 Wishlist toggle form (correctly indented & scoped)
+      form(method="POST", action="/favorites/toggle")
+        input(type="hidden", name="productId", value=productId)
+        button.favorite-btn(type="submit")
+          if isFavorited
+            | ❌ Remove from Wishlist
+          else
+            | 💖 Add to Wishlist

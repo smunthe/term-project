@@ -53,26 +53,34 @@ async function loadSessionData() {
   }
 }
 
-    // Example: Fill Favorites (if stored in DB later)
-    const favorites = user.favorites || [
-      { name: "Dream House", image: "/assets/productImages/dreamHouse.png" },
-      { name: "Dream Partner", image: "/assets/productImages/DreamPartner.png" },
-      { name: "Nightmare Protection", image: "/assets/productImages/NightmareProtection.png" },
-      { name: "Dream Car", image: "/assets/productImages/DreamCar.png" },
-      { name: "Dream Pet", image: "/assets/productImages/DreamPet.png" },
-      { name: "Dream Scenario", image: "/assets/productImages/DreamScenario.png" }
-    ];
+  const favorites = JSON.parse(user.wishList || '[]');
+  const allProductsRes = await fetch('/api/products'); // Create this route in your backend
+  const allProducts = await allProductsRes.json();
 
-    const favoritesGrid = document.getElementById("favoritesGrid");
-    favorites.forEach(item => {
-      const div = document.createElement("div");
-      div.className = "favorite-item";
-      div.innerHTML = `
-        <img src="${item.image}" alt="${item.name}" />
-        <p>${item.name}</p>
-      `;
-      favoritesGrid.appendChild(div);
-    });
+  const favoritesGrid = document.getElementById("favoritesGrid");
+  favoritesGrid.innerHTML = '';
+
+  favorites.forEach(productId => {
+    const item = allProducts.find(p => p.id === productId);
+    if (!item) return;
+
+    const div = document.createElement("div");
+    div.className = "favorite-item";
+    div.innerHTML = `
+      <img src="${item.image}" alt="${item.name}" />
+      <p>${item.name}</p>
+      <form method="POST" action="/favorites/toggle">
+        <input type="hidden" name="productId" value="${item.id}" />
+        <button type="submit">❌ Remove</button>
+      </form>
+      <form method="POST" action="/shopingcart/add">
+        <input type="hidden" name="productId" value="${item.id}" />
+        <input type="hidden" name="quantity" value="1" />
+        <button type="submit">🛒 Add to Cart</button>
+      </form>
+    `;
+    favoritesGrid.appendChild(div);
+});
 
   } catch (err) {
    console.error("❌ SESSION FETCH FAILED:", err);

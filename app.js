@@ -223,12 +223,20 @@ app.get('/', (req, res) => {
   });
 });
 
-// 🆕 Dynamic route for product pages
 app.get('/product/:id', (req, res) => {
   const id = parseInt(req.params.id);
   const product = products.find(p => p.id === id);
-
   if (!product) return res.status(404).send("Product not found");
+
+  let isFavorited = false;
+  const user = req.session.user;
+
+  if (user && user.wishList) {
+    try {
+      const favs = JSON.parse(user.wishList);
+      isFavorited = favs.includes(id);
+    } catch {}
+  }
 
   res.render('product', {
     pageTitle: product.name,
@@ -237,7 +245,8 @@ app.get('/product/:id', (req, res) => {
     productImage: product.image,
     productDescription: product.description,
     productPrice: product.price,
-    user: req.session.user || null // ✅ Add this
+    isFavorited,
+    user
   });
 });
 
@@ -306,8 +315,9 @@ app.post('/login', (req, res) => {
       paymentMethod: row.paymentMethod,
       pfp: row.pfp || '/default-pfp.png',
       previouslyOrdered: row.previouslyOrdered,
-      cartItems: row.cartItems || '[]'
-    };
+      cartItems: row.cartItems || '[]',
+      wishList: row.wishList || '[]'  // ✅ add this
+};
 
     console.log("✅ SESSION SET:", req.session);
     res.json({ success: true });
@@ -316,15 +326,14 @@ app.post('/login', (req, res) => {
 
 app.get('/profile', checkLogin, (req, res) => {
   const username = req.session.user.username;
-  const favoriteIds = [...new Set(JSON.parse(req.session.user.wishList || '[]'))];
-  const favoriteProducts = products.filter(p => favoriteIds.includes(p.id));
 
-  db.get("SELECT previouslyOrdered FROM Users WHERE userName = ?", [username], (err, row) => {
+  db.get("SELECT wishList, previouslyOrdered FROM Users WHERE userName = ?", [username], (err, row) => {
     if (err) {
-      console.error("❌ Failed to fetch previous orders:", err.message);
+      console.error("❌ Failed to fetch user data:", err.message);
       return res.status(500).send("Server error");
     }
 
+    // 🟢 Parse orders
     let orders = [];
     try {
       orders = JSON.parse(row.previouslyOrdered || '[]');
@@ -332,14 +341,28 @@ app.get('/profile', checkLogin, (req, res) => {
       console.error("❌ Failed to parse previous orders:", e);
     }
 
+    // 🟢 Parse wishlist
+    let favoriteIds = [];
+    try {
+      favoriteIds = [...new Set(JSON.parse(row.wishList || '[]'))];
+    } catch (e) {
+      console.error("❌ Failed to parse wishlist:", e);
+    }
+
+    const favoriteProducts = products.filter(p => favoriteIds.includes(p.id));
+
+    // Optionally update session too:
+    req.session.user.wishList = JSON.stringify(favoriteIds);
+
     res.render('profile', {
       title: 'Your Profile',
       user: req.session.user,
       orders,
-      favoriteProducts // ✅ new variable
+      favoriteProducts
     });
   });
 });
+
 
 app.get('/orders', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
@@ -482,6 +505,72 @@ app.post('/checkout', (req, res) => {
     }
     );
   });
+});
+
+
+app.get('/product/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const product = products.find(p => p.id === id);
+  if (!product) return res.status(404).send("Product not found");
+
+  const isInWishlist = req.session.user?.wishList
+    ? JSON.parse(req.session.user.wishList).includes(id)
+    : false;
+
+  res.render('product', {
+    pageTitle: product.name,
+    productId: product.id,
+    productName: product.name,
+    productImage: product.image,
+    productDescription: product.description,
+    productPrice: product.price,
+    isInWishlist,
+    user: req.session.user || null
+  });
+});
+
+
+app.post('/favorites/toggle', (req, res) => {
+  const { productId, fromProfile } = req.body;
+  const user = req.session.user;
+  if (!user) return res.redirect('/login');
+
+  db.get("SELECT wishList FROM Users WHERE userName = ?", [user.username], (err, row) => {
+    if (err) return res.status(500).send("DB error");
+
+    let favorites = [];
+    try {
+      favorites = JSON.parse(row.wishList || '[]');
+    } catch {
+      favorites = [];
+    }
+
+    const pid = Number(productId);
+    const exists = favorites.includes(pid);
+    const updatedFavorites = exists
+      ? favorites.filter(id => id !== pid)
+      : [...favorites, pid];
+
+    db.run("UPDATE Users SET wishList = ? WHERE userName = ?",
+      [JSON.stringify(updatedFavorites), user.username],
+      (err) => {
+        if (err) return res.status(500).send("Failed to update favorites");
+
+        req.session.user.wishList = JSON.stringify(updatedFavorites);
+
+        // ✅ Redirect logic
+        if (fromProfile) {
+          res.redirect('/profile');
+        } else {
+          res.redirect(`/product/${pid}`);
+        }
+      }
+    );
+  });
+});
+
+app.get('/api/products', (req, res) => {
+  res.json(products);
 });
 
 app.post('/upload-pfp', upload.single('pfp'), (req, res) => {

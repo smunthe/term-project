@@ -194,4 +194,31 @@ pass: 89lol
   font-weight: 500;
   color: #4b3f72;
 }
-  
+.favorite-item {
+  background-color: #bff1fc;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 220px;
+}
+
+.favorite-item form {
+  margin-top: 6px;
+}
+
+.favorite-item button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background-color: #ffe4ec;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.favorite-item button:hover {
+  background-color: #ffcad9;
+}

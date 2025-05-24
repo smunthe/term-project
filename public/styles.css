@@ -261,6 +261,21 @@ products, login and settings, profile
   background-color: #f0f0f0;
 }
 
+
+.favorite-btn {
+  background-color: #ffe4ec;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.favorite-btn:hover {
+  background-color: #ffb3dc;
+}
+
 /* Responsive tweaks */
 @media (max-width: 600px) {
   .product-grid {
