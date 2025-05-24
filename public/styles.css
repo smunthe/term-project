@@ -276,6 +276,11 @@ products, login and settings, profile
   background-color: #ffb3dc;
 }
 
+/* Append to styles.css or nightmareStyle.css */
+.nightmare-nav {
+  background-color: #626262 !important;
+}
+
 /* Responsive tweaks */
 @media (max-width: 600px) {
   .product-grid {

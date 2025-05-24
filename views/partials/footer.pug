@@ -1,4 +1,7 @@
 footer.site-footer
-  p Made with 💖 by DreamStore
-  p
-    | © #{new Date().getFullYear()} DreamStore. All dreams reserved.
+  if mode === 'nightmare'
+    p 🌑 Sweet dreams... if you can sleep 😈
+  else
+    p Made with 💖 by DreamStore
+    p
+      | © #{new Date().getFullYear()} DreamStore. All dreams reserved.

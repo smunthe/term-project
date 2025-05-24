@@ -1,33 +1,39 @@
 extends layout
 
 block styles
-  link(rel="stylesheet", href="/productStyle.css") 
+  if mode === 'nightmare'
+    link(rel="stylesheet", href="/nightmareStyle.css")
+  else
+    link(rel="stylesheet", href="/productStyle.css")
 
 block content
+  if mode === 'nightmare'
+    script.
+      document.addEventListener("DOMContentLoaded", () => {
+        const nav = document.querySelector(".top-nav");
+        const logoImg = document.querySelector(".logo img");
+        if (nav) nav.classList.add("nightmare-nav");
+        if (logoImg) logoImg.src = "/assets/logo2.png";
+      });
+
   .product-page
     .image-container
       img.product-img(src=productImage alt=productName)
-
     .info-container
       h2.product-title= productName
       p.product-description= productDescription
 
       form.buying-form(method="POST" action="/shopingcart/add")
         input(type="hidden", name="productId", value=productId)
-
         label(for='quantity') Quantity:
         input#quantity(type='number', name='quantity', value='1', min='1', required)
-
         label(for='customization') Customization:
         input#customization(type='text', name='customization', placeholder='Custom dream...')
-
         .price-label
           label Price:
           span.price-text $#{productPrice}
-
         button(type='submit') Add to Cart
 
-      // 💖 Wishlist toggle form (correctly indented & scoped)
       form(method="POST", action="/favorites/toggle")
         input(type="hidden", name="productId", value=productId)
         button.favorite-btn(type="submit")

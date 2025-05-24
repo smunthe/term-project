@@ -29,21 +29,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
-// 🔄 Product data - used for both homepage and dynamic product pages
 const products = [
-  { id: 1, name: 'Dream House', image: '/assets/productImages/dreamHouse.png', description: 'A cozy retreat built from imagination.', price: 20 },
-  { id: 2, name: 'Dream Car', image: '/assets/productImages/DreamCar.png', description: 'Runs on sparkles and clouds.', price: 100 },
-  { id: 3, name: 'Dream Pet', image: '/assets/productImages/DreamPet.png', description: 'Your cuddliest companion yet.', price: 15 },
-  { id: 4, name: 'Dream Partner', image: '/assets/productImages/DreamPartner.png', description: 'Someone who understands your vibes.', price: 25 },
-  { id: 5, name: 'Dream Job', image: '/assets/productImages/DreamJob.png', description: 'Work without burnout or meetings.', price: 35 },
-  { id: 6, name: 'Dream Career', image: '/assets/productImages/DreamCareer.png', description: 'Ocean breeze & pastel skies.', price: 50 },
-  { id: 7, name: 'Dream Scenario', image: '/assets/productImages/DreamScenario.png', description: 'Always fits, always cute.', price: 18 },
-  { id: 8, name: 'Healing Nightmares', image: '/assets/productImages/HealingNightmare.png', description: 'No tests, just fun learning.', price: 40 },
-  { id: 9, name: 'Retrieve Dream', image: '/assets/productImages/RetrieveDream.png', description: 'That perfect moment, on repeat.', price: 22 },
-  { id: 10, name: 'Nightmare Protection', image: '/assets/productImages/NightmareProtection.png', description: 'Sleep peacefully, always.', price: 10 },
-  { id: 11, name: 'Nightmare Roulette', image: '/assets/productImages/RouletteNightmare.png', description: 'Spin your fate.', price: 60 },
-  { id: 12, name: 'Send a Nightmare', image: '/assets/productImages/SendNightmare.png', description: 'A spooky surprise for your enemy.', price: 30 }
+  { id: 1, name: 'Dream House', image: '/assets/productImages/dreamHouse.png', description: 'A cozy retreat built from imagination.', price: 20, mode: 'dream' },
+  { id: 2, name: 'Dream Car', image: '/assets/productImages/DreamCar.png', description: 'Runs on sparkles and clouds.', price: 100, mode: 'dream' },
+  { id: 3, name: 'Dream Pet', image: '/assets/productImages/DreamPet.png', description: 'Your cuddliest companion yet.', price: 15, mode: 'dream' },
+  { id: 4, name: 'Dream Partner', image: '/assets/productImages/DreamPartner.png', description: 'Someone who understands your vibes.', price: 25, mode: 'dream' },
+  { id: 5, name: 'Dream Job', image: '/assets/productImages/DreamJob.png', description: 'Work without burnout or meetings.', price: 35, mode: 'dream' },
+  { id: 6, name: 'Dream Career', image: '/assets/productImages/DreamCareer.png', description: 'Ocean breeze & pastel skies.', price: 50, mode: 'dream' },
+  { id: 7, name: 'Dream Scenario', image: '/assets/productImages/DreamScenario.png', description: 'Always fits, always cute.', price: 18, mode: 'dream' },
+  { id: 8, name: 'Healing Nightmares', image: '/assets/productImages/HealingNightmare.png', description: 'No tests, just fun learning.', price: 40, mode: 'nightmare' },
+  { id: 9, name: 'Retrieve Dream', image: '/assets/productImages/RetrieveDream.png', description: 'That perfect moment, on repeat.', price: 22, mode: 'dream' },
+  { id: 10, name: 'Nightmare Protection', image: '/assets/productImages/NightmareProtection.png', description: 'Sleep peacefully, always.', price: 10, mode: 'nightmare' },
+  { id: 11, name: 'Nightmare Roulette', image: '/assets/productImages/RouletteNightmare.png', description: 'Spin your fate.', price: 60, mode: 'nightmare' },
+  { id: 12, name: 'Send a Nightmare', image: '/assets/productImages/SendNightmare.png', description: 'A spooky surprise for your enemy.', price: 30, mode: 'nightmare' }
 ];
+
 
 // the about page
 
@@ -228,15 +228,21 @@ app.get('/product/:id', (req, res) => {
   const product = products.find(p => p.id === id);
   if (!product) return res.status(404).send("Product not found");
 
-  let isFavorited = false;
-  const user = req.session.user;
+  const user = req.session.user || null;
 
+  // Check if in wishlist
+  let isFavorited = false;
   if (user && user.wishList) {
     try {
       const favs = JSON.parse(user.wishList);
       isFavorited = favs.includes(id);
-    } catch {}
+    } catch (err) {
+      console.error("❌ Failed to parse wishList:", err);
+    }
   }
+
+  // Nightmare mode check
+  const isNightmare = product.name.toLowerCase().includes('nightmare');
 
   res.render('product', {
     pageTitle: product.name,
@@ -246,9 +252,11 @@ app.get('/product/:id', (req, res) => {
     productDescription: product.description,
     productPrice: product.price,
     isFavorited,
+    mode: isNightmare ? 'nightmare' : 'default',
     user
   });
 });
+
 
 // app.get('/index', (req, res) => {
 //   res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -518,26 +526,6 @@ app.post('/checkout', (req, res) => {
 });
 
 
-app.get('/product/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  const product = products.find(p => p.id === id);
-  if (!product) return res.status(404).send("Product not found");
-
-  const isInWishlist = req.session.user?.wishList
-    ? JSON.parse(req.session.user.wishList).includes(id)
-    : false;
-
-  res.render('product', {
-    pageTitle: product.name,
-    productId: product.id,
-    productName: product.name,
-    productImage: product.image,
-    productDescription: product.description,
-    productPrice: product.price,
-    isInWishlist,
-    user: req.session.user || null
-  });
-});
 
 
 app.post('/favorites/toggle', (req, res) => {

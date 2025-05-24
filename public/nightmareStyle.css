@@ -1,19 +1,19 @@
-/* PAGE BACKGROUND: soft yellow */
+/* NIGHTMARE MODE STYLES */
+
 body {
   font-family: 'Poppins', Arial, sans-serif;
-  background-color: #FFFFDB;  /* yellow background */
+  background-color: #9F605F;
   margin: 0;
   padding: 30px;
-  color: #333;
+  color: #FFFFFF;
 }
 
-/* NAVBAR: flush with window, pink background */
 .top-nav {
-  background-color: #ffcfef; /* pink */
-  width: 100vw; /* full viewport width */
+  background-color: #626262;
+  width: 100vw;
   margin: 0;
   padding: 10px 20px;
-  position: fixed; /* stays on top */
+  position: fixed;
   top: 0;
   left: 0;
   box-sizing: border-box;
@@ -23,12 +23,10 @@ body {
   align-items: center;
 }
 
-/* Make sure the content below navbar is not hidden behind it */
 body > :not(.top-nav) {
-  margin-top: 60px; /* adjust depending on nav height */
+  margin-top: 60px;
 }
 
-/* PRODUCT PAGE CONTAINER: light blue background or white */
 .product-page {
   display: flex;
   flex-direction: row;
@@ -36,13 +34,12 @@ body > :not(.top-nav) {
   gap: 50px;
   max-width: 1100px;
   margin: 0 auto;
-  background: #bff1fc; /* light blue */
+  background: #7c4040;
   padding: 40px 50px;
   border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
-/* IMAGE CONTAINER */
 .image-container {
   flex: 1;
   display: flex;
@@ -56,15 +53,14 @@ body > :not(.top-nav) {
   width: 100%;
   object-fit: contain;
   border-radius: 12px;
-  border: 1px solid #ccc;
-  box-shadow: 0 4px 15px rgba(255, 182, 193, 0.5);
+  border: 1px solid #FFFFDB;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
   transition: transform 0.3s ease;
 }
 .product-img:hover {
   transform: scale(1.05);
 }
 
-/* INFO CONTAINER */
 .info-container {
   flex: 2;
   display: flex;
@@ -76,50 +72,50 @@ body > :not(.top-nav) {
 .product-title {
   font-size: 32px;
   font-weight: 700;
-  color: #5c6bc0; /* dreamy blue */
+  color: #FFFFDB;
   margin-bottom: 12px;
 }
 
 .product-description {
   font-size: 18px;
-  color: #555;
+  color: #f4f4f4;
   line-height: 1.5;
   margin-bottom: 30px;
 }
 
-/* FORM STYLES */
 .buying-form label {
   font-weight: 600;
   margin-bottom: 8px;
   display: block;
-  color: #333;
+  color: #fff;
 }
 
 .buying-form input[type="number"],
 .buying-form input[type="text"] {
   padding: 8px;
   margin-bottom: 15px;
-  width: 100%;        /* changed from fixed 220px */
-  max-width: 220px;   /* optional: limit max width */
-  box-sizing: border-box; /* includes padding and border in width */
+  width: 100%;
+  max-width: 220px;
+  box-sizing: border-box;
   border-radius: 6px;
   border: 1px solid #ccc;
+  background-color: #333;
+  color: #fff;
 }
 
 .buying-form input[type="number"]:focus,
 .buying-form input[type="text"]:focus {
-  border-color: #5c6bc0; /* darker blue on focus */
+  border-color: #D1807F;
   outline: none;
 }
 
-/* PRICE LABEL */
 .price-label {
   display: flex;
   align-items: baseline;
   gap: 10px;
   font-size: 18px;
   font-weight: 700;
-  color: #d81b60; /* soft pink */
+  color: #FFDEDE;
   margin-bottom: 30px;
 }
 
@@ -128,31 +124,62 @@ body > :not(.top-nav) {
   font-weight: 900;
 }
 
-/* BUTTON */
 .buying-form button {
-  background-color: #ffb6c1; /* light pink */
+  background-color: #D1807F;
   border: none;
   padding: 14px 30px;
   border-radius: 10px;
   font-size: 18px;
   font-weight: 700;
-  color: #212121;
+  color: #fff;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(255, 182, 193, 0.5);
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.3);
   transition: background-color 0.3s ease;
 }
 
 .buying-form button:hover {
-  background-color: #be669f; /* deeper pink on hover */
-  color: white;
+  background-color: #c05c58;
+  color: #FFF;
 }
 
+.favorite-btn {
+  margin-top: 10px;
+  background-color: #D1807F;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.favorite-btn:hover {
+  background-color: #c05c58;
+}
 .site-footer {
-  background-color: #ffcfef; /* bubbly pink */
-  color: #333;
+  background-color: #626262;
+  color: #fff;
   padding: 20px;
   text-align: center;
-  font-weight: 500;
+  border-top: 2px solid #ffffdb;
+  font-family: 'Courier New', monospace;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.logo img {
+  max-height: 70px; /* increase from default like 40px */
+  width: auto;
+  transition: transform 0.3s ease;
+}
+
+.logo img:hover {
+  transform: scale(1.05);
+}
+.top-nav .logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
 }
 
 /* RESPONSIVE */
@@ -201,5 +228,11 @@ body > :not(.top-nav) {
   .buying-form button {
     font-size: 16px;
     padding: 14px 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .logo img {
+    max-height: 50px;
   }
 }
