@@ -475,34 +475,44 @@ app.post('/checkout', (req, res) => {
   const username = req.session.user.username;
 
   db.get("SELECT previouslyOrdered FROM Users WHERE userName = ?", [username], (err, row) => {
-    if (err) return res.status(500).send("Database error");
-
-    let cart = [], prevORders = [];
-    try {
-      cart = JSON.parse(row.cartItems || '[]');
-      prevOrders = JSON.parse(row.previouslyOrdered || '[]');
-    } catch (e) {
-      console.error("❌ Order parse failed:", e);
+    if (err) {
+      console.error("DB SELECT error:", err);
+      return res.status(500).send("Database error");
     }
 
-    // Create a new grouped order with date
+    let prevOrders = [];
+    try {
+      prevOrders = row && row.previouslyOrdered ? JSON.parse(row.previouslyOrdered) : [];
+    } catch (e) {
+      console.error("Error parsing previouslyOrdered:", e);
+      return res.status(500).send("Data parsing error");
+    }
+
     const newOrder = {
-      date: new Date().toISOString().split('T')[0], // "YYYY-MM-DD"
+      date: new Date().toISOString().split('T')[0],
       items: cart
     };
 
-    const updatedOrders = [newOrder, ...prevOrders]; // newest first
+    prevOrders.unshift(newOrder);
+
+    const updatedOrdersString = JSON.stringify(prevOrders);
 
     db.run(
-    `UPDATE Users SET previouslyOrdered = ?, cartItems = '[]' WHERE userName = ?`,
-    [JSON.stringify(newOrders), username],
-    err => {
-      if (err) return res.status(500).send("Failed to save order");
+      `UPDATE Users SET previouslyOrdered = ?, cartItems = '[]' WHERE userName = ?`,
+      [updatedOrdersString, username],
+      function (err) {
+        if (err) {
+          console.error("DB UPDATE error:", err);
+          console.log("Data attempted to save:", updatedOrdersString);
+          return res.status(500).send("Failed to save order");
+        }
 
-      req.session.user.previouslyOrdered = JSON.stringify(newOrders);
-      req.session.user.cartItems = '[]'; // optional if you still track this
-      res.redirect('/profile');
-    }
+        req.session.user.previouslyOrdered = updatedOrdersString;
+        req.session.user.cartItems = '[]';
+        req.session.shopingcart = [];
+
+        return res.redirect('/profile');
+      }
     );
   });
 });
