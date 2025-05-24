@@ -1,5 +1,23 @@
 
 /* GENERAL PAGE CONTAINER */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}
+
+
 body {
   font-family: Arial, sans-serif;
   background-color: #FFFFDB;
@@ -189,7 +207,7 @@ h1 {
   color: #444;
   font-size: 14px;
   border-top: 1px solid #ffb3d1;
-  margin-top: 40px;
+  /* margin-top: 40px; */
 }
 
 /* searchSuggestions 

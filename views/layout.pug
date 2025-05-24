@@ -16,9 +16,11 @@ html
   block styles
   body
     script(src="/sessionChecker.js")
-    include ./partials/navbar.pug 
-    
-    block content
 
-    include ./partials/footer.pug
+    .page-wrapper
+      include ./partials/navbar.pug
 
+      main
+        block content
+
+      include ./partials/footer.pug
