@@ -141,27 +141,3 @@ form {
   flex-direction: column;
 }
 
-.buttonContainer {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-
-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  background-color: #3f51b5; /* blue */
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-bottom: 10px;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #283593; /* darker blue on hover */
-}

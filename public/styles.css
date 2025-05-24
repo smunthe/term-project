@@ -215,6 +215,20 @@ and search-container
 
 products, login and settings, profile 
 */
+
+#searchToggle {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#searchToggle:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(92, 107, 192, 0.6);
+  border-radius: 4px;
+}
+
 .search-container {
   position: relative;
   display: inline-block;
@@ -261,25 +275,6 @@ products, login and settings, profile
   background-color: #f0f0f0;
 }
 
-
-.favorite-btn {
-  background-color: #ffe4ec;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  margin-top: 8px;
-}
-
-.favorite-btn:hover {
-  background-color: #ffb3dc;
-}
-
-/* Append to styles.css or nightmareStyle.css */
-.nightmare-nav {
-  background-color: #626262 !important;
-}
 
 /* Responsive tweaks */
 @media (max-width: 600px) {
