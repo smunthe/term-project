@@ -202,13 +202,20 @@ display: inline-flex;
 
 .site-footer {
   background-color: #ffe4ec;
-  padding: 20px;
-  text-align: center;
   color: #444;
   font-size: 14px;
+  text-align: center;
+  padding: 20px;
+
+  width: 100vw;             /* ensure full viewport width */
+  margin: 0;                /* remove any default margins */
+  position: relative;
+  left: 0;
+  right: 0;
+  box-sizing: border-box;
   border-top: 1px solid #ffb3d1;
-  /* margin-top: 40px; */
 }
+
 
 /* searchSuggestions 
 and search-container 
@@ -301,6 +308,22 @@ products, login and settings, profile
 .nightmare-nav {
   background-color: #626262 !important;
 }
+
+.favorite-btn {
+  background-color: #ffe4ec;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.favorite-btn:hover {
+  background-color: #ffb3dc;
+}
+
+
 
 /* Responsive tweaks */
 @media (max-width: 600px) {
