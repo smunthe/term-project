@@ -10,12 +10,12 @@ const app = express();
 app.use(session({
   secret: 'your-secret-key',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     httpOnly: true,
     sameSite: 'lax',
     maxAge: 1000 * 60 * 60,
-    secure: false // 🔥 FORCE OFF in dev mode
+    secure: false
   }
 }));
 
@@ -97,12 +97,6 @@ app.get('/about', (req, res) => {
     user: req.session.user || null
   });
 });
-
-
-
-
-
-
 
 
 
@@ -247,7 +241,7 @@ app.post('/register', (req, res) => {
         email: row.email,
         shippingAddress: row.shippingAddress,
         paymentMethod: row.paymentMethod,
-        pfp: row.pfp || '/default-pfp.png',
+        pfp: row.pfp && row.pfp !== 'empty' ? row.pfp : '/default-pfp.png',
         previouslyOrdered: row.previouslyOrdered,
         cartItems: row.cartItems || '[]'
       };
@@ -526,7 +520,7 @@ app.post('/upload-pfp', upload.single('pfp'), (req, res) => {
   const imagePath = '/uploads/' + req.file.filename;
   const username = req.session.user.username;
 
-  db.run('UPDATE Users SET pfp = ? WHERE userName = ?', [imagePath, username], err => {
+  db.run('UPDATE Users SET pfp = ? WHERE userName = ?', [imagePath, username], (err) => {
     if (err) return res.status(500).send("Failed to update profile pic");
     req.session.user.pfp = imagePath;
     res.redirect('/profile');
@@ -563,31 +557,36 @@ app.get('/settings', (req,res) => {
 
 app.post('/settings', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
-  
-  const { firstName, shippingAddress, email, paymentMethod } = req.body;
+
+  const { firstName, shippingAddress, email, paymentMethod, pfp } = req.body;
   const username = req.session.user.username;
 
   const updateQuery = `
-    UPDATE Users
-    SET firstName = ?, shippingAddress = ?, email = ?, paymentMethod = ?
+    UPDATE Users SET 
+      firstName = ?, 
+      shippingAddress = ?, 
+      email = ?, 
+      paymentMethod = ?, 
+      pfp = ?
     WHERE userName = ?
   `;
 
-  db.run(updateQuery, [firstName, shippingAddress, email, paymentMethod, username], function(err) {
+  db.run(updateQuery, [firstName, shippingAddress, email, paymentMethod, pfp, username], function(err) {
     if (err) {
-      console.error("❌ Failed to update user:", err.message);
-      return res.status(500).send("Failed to update settings");
+      console.error("❌ Failed to update user:", err);
+      return res.status(500).send("Failed to update profile");
     }
 
-    // 🔄 Update the session so profile reflects changes
     req.session.user.firstName = firstName;
     req.session.user.shippingAddress = shippingAddress;
     req.session.user.email = email;
     req.session.user.paymentMethod = paymentMethod;
+    req.session.user.pfp = pfp;
 
-    res.redirect('/profile'); // ✅ Go back to profile
+    res.redirect('/profile');
   });
 });
+
 
 app.get('/api/session', (req, res) => {
   console.log("SESSION CHECK:", req.session); // 🔍 Watch this in terminal
