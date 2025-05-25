@@ -1,10 +1,4 @@
-/*
-body: background-color: #f3f0ff;
-pfp:  border: 3px solid #c3baff;
-setting link/view all: color: #6b5ce7;
-h3:     color: #4b3f72;
-favorite item: background-color: #f5f3ff;
-*/
+
 
 body {
     font-family: 'Segoe UI', sans-serif;
@@ -16,11 +10,11 @@ body {
 
 .profile-container {
   max-width: 800px;
-  margin: 30px 30px 30px;
-  background: #fff;
-  padding: 50px 30px 30px; /* add some top and horizontal padding */
+  margin: 40px auto; 
+  background: white;
+  padding: 30px;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .profile-header {
@@ -109,9 +103,9 @@ h3 {
 }
 
 #orderList {
-  list-style: none; /* No bullets */
-  padding-left: 0;  /* Remove left padding */
-  margin-left: 0;   /* Remove left margin */
+  list-style: none; 
+  padding-left: 0; 
+  margin-left: 0;  
 }
 
 .order-item {

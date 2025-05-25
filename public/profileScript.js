@@ -22,11 +22,11 @@ async function loadSessionData() {
     console.log("👀 Loaded user:", user);
     document.getElementById("profileName").textContent = user.firstName || "No name!";    document.getElementById("profileEmail").textContent = `Email: ${user.email}`;
 
-    // Set Personal Info
+   
     document.getElementById("profileAddress").textContent = `🏠 Address: ${user.shippingAddress}`;
     document.getElementById("profilePayment").textContent = `💳 Payment Method: ${user.paymentMethod}`;
 
-    // Example: Parse and insert recent orders (if stored as JSON)
+    
     if (user.previouslyOrdered && user.previouslyOrdered !== "empty") {
   try {
     const orders = JSON.parse(user.previouslyOrdered);
@@ -54,7 +54,7 @@ async function loadSessionData() {
 }
 
   const favorites = JSON.parse(user.wishList || '[]');
-  const allProductsRes = await fetch('/api/products'); // Create this route in your backend
+  const allProductsRes = await fetch('/api/products'); 
   const allProducts = await allProductsRes.json();
 
   const favoritesGrid = document.getElementById("favoritesGrid");
@@ -84,7 +84,7 @@ async function loadSessionData() {
 
   } catch (err) {
    console.error("❌ SESSION FETCH FAILED:", err);
-  alert("Session error: " + err); // 🔍 you’ll actually see it now
+  alert("Session error: " + err); 
   window.location.href = '/login';
   }
 };

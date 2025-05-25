@@ -29,7 +29,6 @@ window.onload = async () => {
       if (pfpIcon) pfpIcon.style.display = "none";
     }
 
-    // ✅ ADD THIS FOR LIVE SEARCH
     const searchInput = document.getElementById("searchInput");
     const suggestionBox = document.getElementById("searchSuggestions");
 

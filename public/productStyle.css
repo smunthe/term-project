@@ -23,7 +23,6 @@ body {
   align-items: center;
 }
 
-/* Make sure the content below navbar is not hidden behind it */
 body > :not(.top-nav) {
   margin-top: 60px; /* adjust depending on nav height */
 }
@@ -99,9 +98,9 @@ body > :not(.top-nav) {
 .buying-form input[type="text"] {
   padding: 8px;
   margin-bottom: 15px;
-  width: 100%;        /* changed from fixed 220px */
-  max-width: 220px;   /* optional: limit max width */
-  box-sizing: border-box; /* includes padding and border in width */
+  width: 100%;        
+  max-width: 220px;   
+  box-sizing: border-box; 
   border-radius: 6px;
   border: 1px solid #ccc;
 }
@@ -147,13 +146,7 @@ body > :not(.top-nav) {
   color: white;
 }
 
-.site-footer {
-  background-color: #ffcfef; /* bubbly pink */
-  color: #333;
-  padding: 20px;
-  text-align: center;
-  font-weight: 500;
-}
+
 
 /* RESPONSIVE */
 
