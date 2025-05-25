@@ -18,6 +18,7 @@
   "homepage": "https://github.com/smunthe/term-project#readme",
   "description": "",
   "dependencies": {
+    "connect-sqlite3": "^0.9.15",
     "express": "^5.1.0",
     "express-session": "^1.18.1",
     "multer": "^2.0.0",

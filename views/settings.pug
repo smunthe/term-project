@@ -1,33 +1,35 @@
+//- settings.pu
 extends layout
 
 block styles
   link(rel="stylesheet", href="/settings.css")
 
 block content
- 
+  form(method="POST", action="/settings")
+    .profile-container
+      section.profile-header
+        img.profile-pic(src=(user.pfp || '/default-pfp.png'), alt="Profile Picture")
 
+        label(for="pfp") Profile Image URL:
+        input#pfp(type="text", name="pfp", value=user.pfp)
 
-    form(method="POST", action="/settings")
-      .profile-container
-        section.profile-header
-          img.profile-pic(src=(user.pfp || '/default-pfp.png'), alt="Profile Picture")
-          .profile-info
-            label(for="firstName") Name:
-            input#firstName(type="text", name="firstName", value=user.firstName)
+        .profile-info
+          label(for="firstName") Name:
+          input#firstName(type="text", name="firstName", value=user.firstName)
 
-            label(for="userName") Username:
-            input#userName(type="text", name="userName", value=user.username readonly)
+          label(for="userName") Username:
+          input#userName(type="text", name="userName", value=user.username readonly)
 
-      .setting-field
-        label(for="shippingAddress") Address:
-        input#shippingAddress(type="text", name="shippingAddress", value=user.shippingAddress)
+    .setting-field
+      label(for="shippingAddress") Address:
+      input#shippingAddress(type="text", name="shippingAddress", value=user.shippingAddress)
 
-      .setting-field
-        label(for="email") Email:
-        input#email(type="email", name="email", value=user.email)
+    .setting-field
+      label(for="email") Email:
+      input#email(type="email", name="email", value=user.email)
 
-      .setting-field
-        label(for="paymentMethod") Payment Method:
-        input#paymentMethod(type="text", name="paymentMethod", value=user.paymentMethod)
+    .setting-field
+      label(for="paymentMethod") Payment Method:
+      input#paymentMethod(type="text", name="paymentMethod", value=user.paymentMethod)
 
-      button(type="submit") ✅ Save Changes
+    button(type="submit") ✅ Save Changes
