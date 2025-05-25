@@ -218,11 +218,7 @@ display: inline-flex;
   border-top: 1px solid #ffb3d1;
 }
 
-/* searchSuggestions 
-and search-container 
 
-products, login and settings, profile 
-*/
 
 #searchToggle {
   background: none;
@@ -267,8 +263,8 @@ products, login and settings, profile
   padding: 8px 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 100%; /* Make input take full form width */
-  box-sizing: border-box; /* Include padding in width */
+  width: 100%; 
+  box-sizing: border-box; 
 }
 
 
@@ -305,7 +301,7 @@ products, login and settings, profile
   background-color: #ffb3dc;
 }
 
-/* Append to styles.css or nightmareStyle.css */
+
 .nightmare-nav {
   background-color: #626262 !important;
 }

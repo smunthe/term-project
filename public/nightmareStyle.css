@@ -159,7 +159,6 @@ body > :not(.top-nav) {
 .site-footer {
   background-color: #626262;
   color: #fff;
-  .site-footer {
   width: 100vw;         /* Viewport width */
   position: relative;
   left: 50%;
@@ -167,13 +166,13 @@ body > :not(.top-nav) {
   margin-left: -50vw;
   margin-right: -50vw;
   padding: 20px;
-  background-color: #ffe4ec;
+
   text-align: center;
   box-sizing: border-box;
   border-top: 1px solid #ffb3d1;
 }
   
-}
+
 
 .logo img {
   max-height: 70px; /* increase from default like 40px */
