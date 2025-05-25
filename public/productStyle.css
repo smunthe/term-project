@@ -147,13 +147,7 @@ body > :not(.top-nav) {
   color: white;
 }
 
-.site-footer {
-  background-color: #ffcfef; /* bubbly pink */
-  color: #333;
-  padding: 20px;
-  text-align: center;
-  font-weight: 500;
-}
+
 
 /* RESPONSIVE */
 

@@ -11,6 +11,8 @@ html, body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
 main {
@@ -203,19 +205,18 @@ display: inline-flex;
 .site-footer {
   background-color: #ffe4ec;
   color: #444;
-  font-size: 14px;
-  text-align: center;
-  padding: 20px;
-
-  width: 100vw;             /* ensure full viewport width */
-  margin: 0;                /* remove any default margins */
+  width: 100vw;         /* Viewport width */
   position: relative;
-  left: 0;
-  right: 0;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  padding: 20px;
+  background-color: #ffe4ec;
+  text-align: center;
   box-sizing: border-box;
   border-top: 1px solid #ffb3d1;
 }
-
 
 /* searchSuggestions 
 and search-container 

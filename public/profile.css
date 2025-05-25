@@ -16,11 +16,11 @@ body {
 
 .profile-container {
   max-width: 800px;
-  margin: 30px 30px 30px;
-  background: #fff;
-  padding: 50px 30px 30px; /* add some top and horizontal padding */
+  margin: 40px auto; /* ✅ centers it horizontally */
+  background: white;
+  padding: 30px;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .profile-header {
