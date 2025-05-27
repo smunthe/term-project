@@ -89,6 +89,11 @@ db.run(`CREATE TABLE IF NOT EXISTS Users (
   console.log("Users table created (if it didn't already exist).");
 });
 
+db.all("SELECT * FROM Users", (err, rows) => {
+  console.log("All users in DB:", rows);
+});
+
+
 
 // Routes: Public Views 
 app.get('/', (req, res) => {
@@ -167,6 +172,27 @@ app.get('/login', (req, res) => {
   res.render('login', {
     title: 'Login Page',
     user: req.session.user || null 
+  });
+});
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  db.get("SELECT * FROM Users WHERE userName = ? AND password = ?", [username, password], (err, row) => {
+    if (err) return res.status(500).json({ success: false, error: 'DB error' });
+    if (!row) return res.status(401).json({ success: false, error: 'Invalid login' });
+    req.session.user = {
+      username: row.userName,
+      firstName: row.firstName,
+      email: row.email,
+      shippingAddress: row.shippingAddress,
+      paymentMethod: row.paymentMethod,
+      pfp: row.pfp || '/default-pfp.png',
+      previouslyOrdered: row.previouslyOrdered,
+      cartItems: row.cartItems || '[]',
+      wishList: row.wishList || '[]'  // ✅ add this
+};
+    console.log("✅ SESSION SET:", req.session);
+    res.json({ success: true });
   });
 });
 
