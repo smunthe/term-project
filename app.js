@@ -1,3 +1,4 @@
+// Imports & Setup 
 const express = require('express');
 const path = require('path');
 const sqlite3 = require("sqlite3").verbose();
@@ -7,6 +8,7 @@ const multer = require('multer');
 const PORT = 3000;
 const app = express();
 
+// Middleware 
 app.use(session({
   secret: 'your-secret-key',
   resave: false,
@@ -18,17 +20,16 @@ app.use(session({
     secure: false
   }
 }));
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Set up Pug
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
+
+// Product Data 
 const products = [
   { id: 1, name: 'Dream House', image: '/assets/productImages/dreamHouse.png', description: 'A cozy retreat built from imagination.', price: 20, mode: 'dream' },
   { id: 2, name: 'Dream Car', image: '/assets/productImages/DreamCar.png', description: 'Runs on sparkles and clouds.', price: 100, mode: 'dream' },
@@ -45,8 +46,72 @@ const products = [
 ];
 
 
-// the about page
 
+// Middleware: CORS & Auth
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Credentials', 'true');  // ✅ allow cookies!
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
+function checkLogin(req, res, next) {
+  if (req.session.user) {
+    next();
+  } else {
+    res.redirect('/login');
+  }
+}
+
+
+
+// SQLite setup
+const db = new sqlite3.Database("users.db", (err) => {
+  if (err) return console.error("Error opening database:", err.message);
+  console.log("Connected to the user database.");
+});
+
+db.run(`CREATE TABLE IF NOT EXISTS Users (
+  userName TEXT UNIQUE,
+  email TEXT UNIQUE,
+  firstName TEXT NOT NULL,
+  lastName TEXT NOT NULL,
+  password TEXT NOT NULL,
+  rePassword TEXT NOT NULL,
+  shippingAddress TEXT DEFAULT 'empty',
+  pfp TEXT DEFAULT 'empty', 
+  paymentMethod TEXT DEFAULT 'empty', 
+  wishList TEXT DEFAULT '[]', 
+  cartItems TEXT DEFAULT '[]',
+  previouslyOrdered TEXT DEFAULT '[]'
+)`, (err) => {
+  if (err) return console.error("Error creating table: ", err.message);
+  console.log("Users table created (if it didn't already exist).");
+});
+
+
+// Routes: Public Views 
+app.get('/', (req, res) => {
+  const user = req.session.user || null;
+  let wishList = [];
+
+  if (user && user.wishList) {
+    try {
+      wishList = JSON.parse(user.wishList);
+    } catch {
+      wishList = [];
+    }
+  }
+
+  res.render('storefront', {
+    title: 'DreamStore',
+    products,
+    user,
+    wishList
+  });
+});
+
+// about page 
 app.get('/about', (req, res) => {
   const faqs = [
     {
@@ -98,113 +163,6 @@ app.get('/about', (req, res) => {
   });
 });
 
-
-
-// CORS middleware
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.header('Access-Control-Allow-Credentials', 'true');  // ✅ allow cookies!
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
-
-// SQLite setup
-const db = new sqlite3.Database("users.db", (err) => {
-  if (err) return console.error("Error opening database:", err.message);
-  console.log("Connected to the user database.");
-});
-
-db.run(`CREATE TABLE IF NOT EXISTS Users (
-  userName TEXT UNIQUE,
-  email TEXT UNIQUE,
-  firstName TEXT NOT NULL,
-  lastName TEXT NOT NULL,
-  password TEXT NOT NULL,
-  rePassword TEXT NOT NULL,
-  shippingAddress TEXT DEFAULT 'empty',
-  pfp TEXT DEFAULT 'empty', 
-  paymentMethod TEXT DEFAULT 'empty', 
-  wishList TEXT DEFAULT '[]', 
-  cartItems TEXT DEFAULT '[]',
-  previouslyOrdered TEXT DEFAULT '[]'
-)`, (err) => {
-  if (err) return console.error("Error creating table: ", err.message);
-  console.log("Users table created (if it didn't already exist).");
-});
-
-// Middleware to protect routes
-function checkLogin(req, res, next) {
-  if (req.session.user) {
-    next();
-  } else {
-    res.redirect('/login');
-  }
-}
-
-// Multer for profile image uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'public/uploads'),
-  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
-});
-const upload = multer({ storage });
-
-// Routes
-app.get('/', (req, res) => {
-  const user = req.session.user || null;
-  let wishList = [];
-
-  if (user && user.wishList) {
-    try {
-      wishList = JSON.parse(user.wishList);
-    } catch {
-      wishList = [];
-    }
-  }
-
-  res.render('storefront', {
-    title: 'DreamStore',
-    products,
-    user,
-    wishList
-  });
-});
-
-app.get('/product/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  const product = products.find(p => p.id === id);
-  if (!product) return res.status(404).send("Product not found");
-
-  const user = req.session.user || null;
-
-  // Check if in wishlist
-  let isFavorited = false;
-  if (user && user.wishList) {
-    try {
-      const favs = JSON.parse(user.wishList);
-      isFavorited = favs.includes(id);
-    } catch (err) {
-      console.error("❌ Failed to parse wishList:", err);
-    }
-  }
-
-  // Nightmare mode check
-  const isNightmare = product.name.toLowerCase().includes('nightmare');
-
-  res.render('product', {
-    pageTitle: product.name,
-    productId: product.id,
-    productName: product.name,
-    productImage: product.image,
-    productDescription: product.description,
-    productPrice: product.price,
-    isFavorited,
-    mode: isNightmare ? 'nightmare' : 'default',
-    user
-  });
-});
-
-
-
 app.get('/login', (req, res) => {
   res.render('login', {
     title: 'Login Page',
@@ -252,27 +210,42 @@ app.post('/register', (req, res) => {
 });
 
 
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  db.get("SELECT * FROM Users WHERE userName = ? AND password = ?", [username, password], (err, row) => {
-    if (err) return res.status(500).json({ success: false, error: 'DB error' });
-    if (!row) return res.status(401).json({ success: false, error: 'Invalid login' });
+app.get('/product/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const product = products.find(p => p.id === id);
+  if (!product) return res.status(404).send("Product not found");
 
-    req.session.user = {
-      username: row.userName,
-      firstName: row.firstName,
-      email: row.email,
-      shippingAddress: row.shippingAddress,
-      paymentMethod: row.paymentMethod,
-      pfp: row.pfp || '/default-pfp.png',
-      previouslyOrdered: row.previouslyOrdered,
-      cartItems: row.cartItems || '[]',
-      wishList: row.wishList || '[]'  // ✅ add this
-};
+  const user = req.session.user || null;
 
-    console.log("✅ SESSION SET:", req.session);
-    res.json({ success: true });
+  // Check if in wishlist
+  let isFavorited = false;
+  if (user && user.wishList) {
+    try {
+      const favs = JSON.parse(user.wishList);
+      isFavorited = favs.includes(id);
+    } catch (err) {
+      console.error("❌ Failed to parse wishList:", err);
+    }
+  }
+
+  // Nightmare mode check
+  const isNightmare = product.name.toLowerCase().includes('nightmare');
+
+  res.render('product', {
+    pageTitle: product.name,
+    productId: product.id,
+    productName: product.name,
+    productImage: product.image,
+    productDescription: product.description,
+    productPrice: product.price,
+    isFavorited,
+    mode: isNightmare ? 'nightmare' : 'default',
+    user
   });
+});
+
+app.get('/api/products', (req, res) => {
+  res.json(products);
 });
 
 app.get('/profile', checkLogin, (req, res) => {
@@ -384,7 +357,7 @@ app.post('/shopingcart/add', (req, res) => {
   res.redirect('/shopingcart');
 });
 
-// POST /shopingcart/update
+
 app.post('/shopingcart/update', express.urlencoded({ extended: true }), (req, res) => {
   const { productId, quantity } = req.body;
   const qty = parseInt(quantity);
@@ -510,9 +483,12 @@ app.post('/favorites/toggle', (req, res) => {
   });
 });
 
-app.get('/api/products', (req, res) => {
-  res.json(products);
+// Multer for profile image uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, 'public/uploads'),
+  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
 });
+const upload = multer({ storage });
 
 app.post('/upload-pfp', upload.single('pfp'), (req, res) => {
   if (!req.session.user) return res.status(401).send("Unauthorized");
