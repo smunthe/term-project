@@ -70,6 +70,6 @@ View it on http://localhost:3000
 --- 
 
 ## 🌐 Links 
-- Live site : [glitch URL]
+- Live site : https://term-project-i7xb.onrender.com/
 ---
 Enjoy shopping your dreams ✨
